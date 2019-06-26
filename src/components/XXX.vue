@@ -54,7 +54,7 @@
         height: 0;
         padding-left: 100px;
         z-index: -1;
-        &.qy {
+        &.qy.active {
           border: 50px solid #cccccc;
           border-right-color: transparent;
           border-bottom: 0;
