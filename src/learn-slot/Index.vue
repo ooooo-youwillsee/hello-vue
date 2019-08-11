@@ -1,0 +1,40 @@
+<template>
+  <div>
+    <h3>插槽</h3>
+    <children-slot>
+      <template v-slot:default="user">
+        <p>{{user.user.lastName}}</p>
+      </template>
+      <template v-slot:other="{other}">
+        <p>other</p>
+        <p>{{other.name}}</p>
+      </template>
+
+      <template v-slot:todo="{item}">
+        <p v-if="item.isShow">
+          {{item.name}}
+        </p>
+      </template>
+    </children-slot>
+  </div>
+</template>
+
+<script>
+  import childrenSlot from './components/children-slot'
+
+  export default {
+    name: 'LearnSlot',
+    components: {
+      childrenSlot
+    },
+    data () {
+      return {
+        msg: 'hello word'
+      }
+    }
+  }
+</script>
+
+<style scoped>
+
+</style>

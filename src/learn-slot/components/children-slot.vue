@@ -1,0 +1,35 @@
+<template>
+  <div>
+    <p>子组件</p>
+    <slot :user="user">{{user.firstName}}</slot>
+    <slot name="other" :other="other"></slot>
+    <slot name="todo" v-for="item in todoList" :item="item">
+    </slot>
+  </div>
+</template>
+
+<script>
+  export default {
+    name: 'children-slot',
+    data () {
+      return {
+        user: {
+          firstName: '后备内容',
+          lastName: 'honghong'
+        },
+        other: {
+          name: 'jiejie'
+        },
+        todoList: [
+          {id: '1', name: 'one', isShow: true},
+          {id: '2', name: 'two', isShow: false},
+          {id: '3', name: 'three', isShow: true}
+        ]
+      }
+    }
+  }
+</script>
+
+<style scoped>
+
+</style>

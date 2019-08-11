@@ -66,7 +66,7 @@ export default {
   },
   filters: {
     nameFilter: function (value) {
-      console.log(1)
+      // 鼠标移入每次都会调用过滤器
       return value + '1'
     }
   },
