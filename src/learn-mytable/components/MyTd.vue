@@ -20,8 +20,8 @@
       }
     },
     mounted () {
-      console.log(this.prop)
-      console.log(this.$parent.$props.item)
+      // console.log(this.prop)
+      // console.log(this.$parent.$props.item)
       // console.log(this.$parent.$props.item[this.prop])
       this.value = this.$parent.$props.item[this.prop]
     }

@@ -1,4 +1,6 @@
 /* eslint-disable */
+import _ from 'lodash'
+
 /**
  * 1、 1到100相加
  */
@@ -92,6 +94,7 @@ console.log(f2(3), '11111')
  */
 
 
+// 1、list tranform to treeList (chidren maybe empty array)
 var dataList = [
   {id: 1, name: '00000', parentId: 0},
   {id: 2, name: '10000', parentId: 1},
@@ -107,24 +110,89 @@ var dataList = [
   {id: 12, name: '21000', parentId: 4},
 ]
 
-// root为0时，root.children = [parentId=0]
-// item.id = 0, item.chilren = [parentId = item.id]
-function makeTree (data, root) {
+function treeList (dataList, root) {
   root.children = []
-  for (let item of data) {
-    if (item.parentId === root.id) {
-      root.children.push(item)
-      makeTree(data, item)
+  dataList.forEach(value => {
+    if (value.parentId === root.id) {
+      root.children.push(value)
+      treeList(dataList, value)
     }
-  }
+  })
   // if (root.children.length === 0) {
   //   delete root.children
   // }
 }
 
-let root = {id: 0}
-makeTree(dataList, root)
+const root = {id: 0}
+treeList(dataList, root)
+
 console.log(root.children)
 
+// 2、if chidren is empty, delete this chidren
+var treeChidren = _.cloneDeep(root.children)
+
+function deleteChild (treeChildren) {
+  treeChildren.forEach(child => {
+    if (!child.children || child.children.length === 0) {
+      delete child.children
+    } else {
+      deleteChild(child.children)
+    }
+  })
+}
+
+deleteChild(treeChidren)
+console.log(treeChidren)
+
+// 3、find path 7 --> [7,0]  4 --> [4,2,1,0]
+
+var pathChildren = _.cloneDeep(treeChidren)
+
+function findPath1 (id, pathList, pathChildren) {
+  if (!pathChildren) {
+    return false
+  }
+  for (let i = 0; i < pathChildren.length; i++) {
+    let child = pathChildren[i]
+    if (child.id === id) {
+      pathList.push(child.id)
+      return true
+    }else if (findPath1(id, pathList, child.children)) {
+      pathList.push(child.id)
+      return true
+    }
+  }
+
+}
+
+let originPathChildren = _.cloneDeep(pathChildren)
+
+function findPath2 (id, pathList, pathChildren) {
+  if (!pathChildren || pathChildren.length === 0) {
+    return
+  }
+  pathChildren.forEach(child => {
+      if (child.id === id) {
+        pathList.push(child.id)
+        findPath2(child.parentId, pathList, originPathChildren)
+      } else {
+        findPath2(id, pathList, child.children)
+      }
+    }
+  )
+}
+
+const pathList = []
+// findPath1(12, pathList, pathChildren)
+findPath1(2, pathList, originPathChildren)
+console.log(pathList)
 
 
+function sum (a,b) {
+  if(a>b){
+    return a-b
+  }else {
+    return a+b
+  }
+
+}
