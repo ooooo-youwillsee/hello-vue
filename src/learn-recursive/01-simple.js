@@ -95,7 +95,7 @@ console.log(f2(3), '11111')
 
 
 // 1、list tranform to treeList (chidren maybe empty array)
-var dataList = [
+let dataList = [
   {id: 1, name: '00000', parentId: 0},
   {id: 2, name: '10000', parentId: 1},
   {id: 3, name: '20000', parentId: 1},
