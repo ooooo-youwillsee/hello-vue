@@ -16,6 +16,8 @@
         </p>
       </template>
     </children-slot>
+    <hr>
+    <button @click="$router.push({name:'index'})">点击跳转首页</button>
   </div>
 </template>
 

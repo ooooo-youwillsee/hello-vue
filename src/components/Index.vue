@@ -48,6 +48,15 @@
 
 <script>
 export default {
+  watch: {
+    '$route': {
+      handler (to, from) {
+        console.log(to, from)
+      },
+      // 代表在wacth里声明了$route这个方法之后立即先去执行handler方法
+      immediate: true
+    }
+  },
   methods: {
     tableRowClassName ({row, rowIndex}) {
       if (rowIndex === 1) {
