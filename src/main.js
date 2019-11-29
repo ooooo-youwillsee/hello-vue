@@ -3,9 +3,9 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-import ElementUI from 'element-ui'
+import ElementUI from 'test-ooooo'
 
-import 'element-ui/lib/theme-chalk/index.css'
+import 'test-ooooo/lib/theme-chalk/index.css'
 
 // import './learn-recursive/01-simple'
 import './learn-recursive/02-complex'
