@@ -8,7 +8,7 @@ import ElementUI from 'test-ooooo'
 import 'test-ooooo/lib/theme-chalk/index.css'
 
 // import './learn-recursive/01-simple'
-import './learn-recursive/02-complex'
+// import './learn-recursive/02-complex'
 
 Vue.use(ElementUI)
 
