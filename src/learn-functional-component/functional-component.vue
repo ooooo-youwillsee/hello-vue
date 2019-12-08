@@ -7,7 +7,7 @@
       console.log(context.scopedSlots)
       const defaultSlot = context.scopedSlots.default(context.props)
       const xxxSlot = context.scopedSlots.xxx({c: 1})
-      return h('div', {}, [defaultSlot, xxxSlot])
+      return h('div', [defaultSlot, xxxSlot])
     }
   }
 

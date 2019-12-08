@@ -1,16 +1,23 @@
 <template>
   <div>
-    <A/>
+    {{ name }}
+    <hr>
+    <router-view/>
   </div>
 </template>
 
 <script>
-  import A from '@/learn-functional-component/A'
 
   export default {
-    components: {A},
     data () {
-      return {}
+      return {
+        name: 'App'
+      }
+    },
+    provide () {
+      return {
+        app: this
+      }
     },
     methods: {},
     mounted () {
