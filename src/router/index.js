@@ -5,6 +5,7 @@ import LearnSlot from '@/learn-slot/Index'
 import LearnMytable from '@/learn-mytable/Index'
 import LearnfunctionalComponent from '@/learn-functional-component/A'
 import LearnProvideInject from '@/learn-provide-inject/A'
+import LearnCss from '@/learn-css/Index'
 
 Vue.use(Router)
 
@@ -34,6 +35,11 @@ export default new Router({
       path: '/learn-provide-inject',
       name: 'learnProvideInject',
       component: LearnProvideInject
+    },
+    {
+      path: '/learn-css',
+      name: 'learnCss',
+      component: LearnCss
     }
   ]
 })
