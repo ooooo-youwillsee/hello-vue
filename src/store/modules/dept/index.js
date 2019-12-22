@@ -26,7 +26,7 @@ const dept = {
     handleDeL({ commit }, id) {
       commit('handleDel', id)
     },
-    addDept ({commit}, dept) {
+    addDept({ commit }, dept) {
       commit('addSubmit', dept)
     }
   }
