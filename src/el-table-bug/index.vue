@@ -18,7 +18,7 @@
               </template>
               <div v-else>
                 <input style="display: none;" type="file" ref="imgFile" name="file"
-                       @change="handleImgUpload($event,scope.$index)"></input>
+                       @change="handleImgUpload($event,scope.$index)"/>
                 <span class="blue-txt" @click="$refs.imgFile.click()">
                      {{ form.infoList[scope.$index].url + ' ---- ' + scope.$index }}
                 </span>

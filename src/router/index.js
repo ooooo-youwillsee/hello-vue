@@ -7,6 +7,7 @@ import LearnfunctionalComponent from '@/learn-functional-component/A'
 import LearnProvideInject from '@/learn-provide-inject/A'
 import LearnCss from '@/learn-css/Index'
 import ElTableBugScope from '@/el-table-bug/index'
+import learnVuex from '@/learn-vuex/dept/index'
 
 Vue.use(Router)
 
@@ -46,6 +47,11 @@ export default new Router({
       path: '/el-table-bug-Scope',
       name: 'ElTableBugScope',
       component: ElTableBugScope
+    },
+    {
+      path: '/learn-vuex',
+      name: 'learnVuex',
+      component: learnVuex
     }
   ]
 })
