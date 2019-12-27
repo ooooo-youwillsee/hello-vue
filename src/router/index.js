@@ -1,13 +1,13 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import App from '@/App'
-import LearnSlot from '@/learn-slot/Index'
-import LearnMytable from '@/learn-mytable/Index'
-import LearnfunctionalComponent from '@/learn-functional-component/A'
-import LearnProvideInject from '@/learn-provide-inject/A'
-import LearnCss from '@/learn-css/Index'
-import ElTableBugScope from '@/el-table-bug/index'
-import learnVuex from '@/learn-vuex/dept/index'
+import LearnSlot from '@learn/learn-slot/Index'
+import LearnMytable from '@learn/learn-mytable/Index'
+import LearnfunctionalComponent from '@learn/learn-functional-component/A'
+import LearnProvideInject from '@learn/learn-provide-inject/A'
+import LearnCss from '@learn/learn-css/Index'
+import ElTableBugScope from '@bug/el-table-bug/index'
+import learnVuex from '@learn/learn-vuex/dept/index'
 
 Vue.use(Router)
 

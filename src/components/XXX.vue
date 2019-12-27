@@ -12,19 +12,19 @@
 </template>
 
 <script>
-  export default {
-    name: 'XXX',
-    data () {
-      return {
-        active: 'qy'
-      }
-    },
-    methods: {
-      switchLogin (type) {
-        this.active = type
-      }
+export default {
+  name: 'XXX',
+  data() {
+    return {
+      active: 'qy'
+    }
+  },
+  methods: {
+    switchLogin(type) {
+      this.active = type
     }
   }
+}
 </script>
 
 <style scoped lang="scss">
