@@ -7,6 +7,7 @@ import store from './store/index'
 import ElementUI from 'element-ui'
 
 import 'element-ui/lib/theme-chalk/index.css'
+import './assets/style/reset.css'
 
 // import './learn-recursive/01-simple'
 // import './learn-recursive/02-complex'

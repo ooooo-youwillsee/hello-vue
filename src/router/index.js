@@ -8,6 +8,8 @@ import LearnProvideInject from '@learn/learn-provide-inject/A'
 import LearnCss from '@learn/learn-css/Index'
 import ElTableBugScope from '@bug/el-table-bug/index'
 import learnVuex from '@learn/learn-vuex/dept/index'
+import learnDisplay from '@learn/learn-display/index'
+import mainContent from '@learn/learn-display/components/index'
 
 Vue.use(Router)
 
@@ -52,6 +54,18 @@ export default new Router({
       path: '/learn-vuex',
       name: 'learnVuex',
       component: learnVuex
+    },
+    {
+      path: '/learn-display',
+      name: 'learnDisplay',
+      component: learnDisplay,
+      children: [
+        {
+          path: '',
+          name: 'mainContent',
+          component: mainContent
+        }
+      ]
     }
   ]
 })
