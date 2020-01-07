@@ -57,7 +57,6 @@ export default new Router({
     },
     {
       path: '/learn-display',
-      name: 'learnDisplay',
       component: learnDisplay,
       children: [
         {

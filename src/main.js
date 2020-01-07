@@ -9,8 +9,9 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import './assets/style/reset.css'
 
-// import './learn-recursive/01-simple'
-// import './learn-recursive/02-complex'
+// import './pages/learn/learn-recursive/01-simple'
+// import './pages/learn/learn-recursive/02-complex'
+import './pages/learn/learn-recursive/03-deptTree.js'
 
 Vue.use(ElementUI)
 
