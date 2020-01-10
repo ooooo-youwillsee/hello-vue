@@ -2,7 +2,7 @@
   <div>
     <p>子组件</p>
     <slot :user="user">{{ user.firstName }}</slot>
-    <slot name="other" :other="other"></slot>
+    <slot name="other" v-bind="$data"></slot>
     <slot v-for="item in todoList" name="todo" :item="item">
     </slot>
   </div>

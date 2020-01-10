@@ -1,7 +1,7 @@
 <template>
   <div>
-    <div v-for="(item, index) in data" :key="index">{{ item }}</div>
-    <button @click="data = [1,2,9]">删除第二个</button>
+    <!--    <div v-for="(item, index) in data" :key="index">{{ item }}</div>-->
+    <!--    <button @click="data = [1,2,9]">删除第二个</button>-->
     <router-view />
   </div>
 </template>

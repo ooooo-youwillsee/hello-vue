@@ -10,6 +10,7 @@ import ElTableBugScope from '@bug/el-table-bug/index'
 import learnVuex from '@learn/learn-vuex/dept/index'
 import learnDisplay from '@learn/learn-display/index'
 import mainContent from '@learn/learn-display/components/index'
+import Temp from '@/pages/temp/index.vue'
 
 Vue.use(Router)
 
@@ -65,6 +66,10 @@ export default new Router({
           component: mainContent
         }
       ]
+    },
+    {
+      path: '/temp',
+      component: Temp
     }
   ]
 })

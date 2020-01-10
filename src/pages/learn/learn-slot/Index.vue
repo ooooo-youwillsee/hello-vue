@@ -2,8 +2,9 @@
   <div>
     <h3>插槽</h3>
     <children-slot>
-      <template v-slot:default="user">
-        <p>{{ user.user.lastName }}</p>
+      <template v-slot:default="{user}">
+        <p>{{ user.lastName }}</p>
+        <el-button @click="handleClick(user.lastName)">{{ msg }}</el-button>
       </template>
       <template v-slot:other="{other}">
         <p>other</p>
@@ -32,6 +33,11 @@ export default {
   data() {
     return {
       msg: 'hello word'
+    }
+  },
+  methods: {
+    handleClick(msg) {
+      this.$message(msg)
     }
   }
 }

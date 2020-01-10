@@ -1,6 +1,13 @@
 const deptTree = require('./data/deptTree')
 import { cloneDeep } from 'lodash'
 
+/**
+ * 有departName就用departName，没有就用domainName作为departName
+ * departmentList，personList，children 都合并到children属性中，
+ *
+ * @param item
+ */
+
 const makeTree = (item) => {
   if (item.hasOwnProperty('departmentList')) {
     item.children = item.departmentList
