@@ -12,6 +12,7 @@ import './assets/style/reset.css'
 // import './pages/learn/learn-recursive/01-simple'
 // import './pages/learn/learn-recursive/02-complex'
 // import './pages/learn/learn-recursive/03-deptTree.js'
+import './pages/learn/learn-recursive/04-deal-table-sum.js'
 
 Vue.use(ElementUI, { size: 'small', zIndex: 3000 })
 
