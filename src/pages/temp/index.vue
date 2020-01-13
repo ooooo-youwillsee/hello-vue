@@ -4,23 +4,47 @@
       <el-button @click="$router.go(-1)">返回</el-button>
       <el-button @click="handleReset">重置</el-button>
     </div>
+    <!--  顶部表单  -->
     <el-row class="form-wrapper">
-      <el-col :span="12">
+      <el-col :span="16">
+        <el-form ref="inlineForm" class="inline-form" :inline="true" :model="inlineForm">
+          <el-form-item label="申请码ID:" prop="applyId">
+            <el-input v-model="inlineForm.applyId"></el-input>
+          </el-form-item>
+          <el-form-item label="授权书编号:" class="authorization-no" prop="authorizationNo">
+            <el-input v-model="inlineForm.authorizationNo"></el-input>
+          </el-form-item>
+          <el-form-item class="apply-code-btn">
+            <el-button @click="applyCodeDialogVisible = true">查看申请码</el-button>
+          </el-form-item>
+        </el-form>
         <el-form ref="form" :model="form" label-width="300px">
-          <el-form-item label="贸易信息单号">
+          <el-form-item label="贸易信息单号:" prop="tradeNO">
             <el-input v-model="form.tradeNO"></el-input>
           </el-form-item>
-          <el-form-item label="借方企业名称/姓名">
-            <el-input v-model="form.bebitEnterpriseName"></el-input>
+          <el-form-item label="借方企业名称/姓名:" prop="debitEnterpriseName">
+            <el-input v-model="form.debitEnterpriseName"></el-input>
           </el-form-item>
-          <el-form-item label="借方统一社会信用代码/身份证号">
-            <el-input v-model="form.bebitNsrsbh"></el-input>
+          <el-form-item label="借方统一社会信用代码/身份证号:" prop="debitNsrsbh">
+            <el-input v-model="form.debitNsrsbh"></el-input>
           </el-form-item>
-          <el-form-item label="借方地址、电话/手机号：">
-            <el-input v-model="form.bebitMobile"></el-input>
+          <el-form-item label="借方地址、电话/手机号:" prop="debitMobile">
+            <el-input v-model="form.debitMobile"></el-input>
           </el-form-item>
-          <el-form-item label="借方开户行及账号：">
-            <el-input v-model="form.bebitBankNumber"></el-input>
+          <el-form-item label="借方开户行及账号:" prop="debitBankNumber">
+            <el-input v-model="form.debitBankNumber"></el-input>
+          </el-form-item>
+          <el-form-item label="融出方名称:" prop="financeEnterpriseName">
+            <el-input v-model="form.financeEnterpriseName"></el-input>
+          </el-form-item>
+          <el-form-item label="融出方统一社会信用代码:" prop="financeNsrsbh">
+            <el-input v-model="form.financeNsrsbh"></el-input>
+          </el-form-item>
+          <el-form-item label="融出方地址、电话:" prop="financeMobile">
+            <el-input v-model="form.financeMobile"></el-input>
+          </el-form-item>
+          <el-form-item label="融出方开户行及账号:" prop="financeBankNumber">
+            <el-input v-model="form.financeBankNumber"></el-input>
           </el-form-item>
         </el-form>
       </el-col>
@@ -87,10 +111,22 @@
               </el-form-item>
             </template>
           </el-table-column>
-          <el-table-column label="操作" align="center">
-            <el-button>查看</el-button>
+          <el-table-column label="操作" align="center" width="200">
+            <template v-slot="{$index, row}">
+              <el-button @click="handleOpenTradeContractUpload($index)">上传贸易合同
+              </el-button>
+              <el-button @click="handleViewTradeContractFile($index, row)">查看</el-button>
+              <el-button @click="handleAddtradeContractRow($index)">添加</el-button>
+              <el-button @click="handleDeleteTradeContractRow($index)">删除</el-button>
+            </template>
           </el-table-column>
         </el-table>
+        <input
+          ref="tradeContractFile"
+          type="file"
+          style="display: none;"
+          @change="handleTradeContractUploadChange"
+        />
       </el-form>
     </div>
 
@@ -219,15 +255,23 @@
             </template>
           </el-table-column>
           <el-table-column label="操作" align="center" width="500">
-            <el-button>上传发票</el-button>
-            <el-button>上传确权凭证</el-button>
-            <el-button>接口读入确权凭证</el-button>
-            <el-button>查看发票信息</el-button>
-            <el-button>查看确权凭证</el-button>
-            <el-button>删除</el-button>
-            <el-button>添加</el-button>
+            <template v-slot="{$index,row}">
+              <el-button @click="handleViewTradeBgUploadInvoice($index, row)">上传发票</el-button>
+              <el-button @click="handleTradeBgTokenFileUpload($index, row)">上传确权凭证</el-button>
+              <el-button>接口读入确权凭证</el-button>
+              <el-button @click="handleViewTradeBgInvoice($index, row)">查看发票信息</el-button>
+              <el-button @click="handleViewTokenFile($index, row)">查看确权凭证</el-button>
+              <el-button @click="handleDeleteTradeBgRow($index, row)">删除</el-button>
+              <el-button @click="handleAddTradeBgRow($index, row)">添加</el-button>
+            </template>
           </el-table-column>
         </el-table>
+        <input
+          ref="tradeBgTokenFile"
+          type="file"
+          style="display: none;"
+          @change="handleTradeBgTokenFileChange"
+        />
       </el-form>
     </div>
 
@@ -307,12 +351,17 @@
       </el-form>
     </div>
 
+    <!--   上传区域 -->
     <el-row class="upload-wrapper" :gutter="25">
       <el-col :span="12">
         <el-button @click="$refs.authorizationFile.click()">上传授权书</el-button>
         <input ref="authorizationFile" type="file" style="display: none;" @change="handleAuthorizationUploadChange" />
         <el-table v-if="fileForm.authorizationFiles.length > 0" :data="fileForm.authorizationFiles" style="width: 100%">
-          <el-table-column prop="fileName" label="文件名" width="180"></el-table-column>
+          <el-table-column prop="file" label="文件名" width="180">
+            <template v-slot="{row}">
+              {{ row.file.name }}
+            </template>
+          </el-table-column>
           <el-table-column prop="authorizationNo" label="授权书编号" width="180">
             <template v-slot="{row}">
               <el-input
@@ -333,7 +382,11 @@
         <el-button @click="$refs.appendixFile.click()">上传附件</el-button>
         <input ref="appendixFile" type="file" style="display: none;" @change="handleAppendixUploadChange" />
         <el-table v-if="fileForm.appendixFiles.length > 0" :data="fileForm.appendixFiles" style="width: 100%">
-          <el-table-column prop="fileName" label="文件名" width="180"></el-table-column>
+          <el-table-column prop="file" label="文件名" width="180">
+            <template v-slot="{row}">
+              {{ row.file.name }}
+            </template>
+          </el-table-column>
           <el-table-column label="操作">
             <template v-slot="{$index}">
               <el-button type="text">下载</el-button>
@@ -344,48 +397,248 @@
       </el-col>
     </el-row>
 
+    <!--   底部按钮 -->
     <el-row class="bottom-wrapper" type="flex" justify="center">
       <el-col :span="3">
         <el-button>保存</el-button>
       </el-col>
       <el-col :span="3">
+        <el-button>生成申请码</el-button>
+      </el-col>
+      <el-col :span="3">
         <el-button>提交</el-button>
       </el-col>
     </el-row>
+
+    <!--  查看申请码  -->
+    <el-dialog
+      class="apply-code-dialog"
+      :center="true"
+      :show-close="false"
+      title="查看申请码"
+      :visible.sync="applyCodeDialogVisible"
+      width="30%"
+    >
+      <span>这是一段信息</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="applyCodeDialogVisible = false">确 定</el-button>
+      </span>
+    </el-dialog>
+
+    <!--  贸易合同附件  -->
+    <el-dialog
+      :center="true"
+      :show-close="false"
+      title="查看附件"
+      :visible.sync="tradeContractFileDialogVisible"
+      width="30%"
+    >
+      <el-table
+        v-if="openTradeContractDialogRow.$index >= 0 && tradeContractForm.tradeContractInfos[openTradeContractDialogRow.$index]"
+        :data="tradeContractForm.tradeContractInfos[openTradeContractDialogRow.$index].tradeContractFiles"
+        style="width:100%"
+      >
+        <el-table-column prop="file" label="文件名" width="180">
+          <template v-slot="{row}">
+            {{ row.file.name }}
+          </template>
+        </el-table-column>
+        <el-table-column label="操作">
+          <template v-slot="{$index, row}">
+            <el-button type="text" @click="handleDownloadTradeContractFile($index, row)">下载</el-button>
+            <el-button type="text" class="delete-btn" @click="handleDeleteTradeContractFile($index, row)">删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="tradeContractFileDialogVisible = false">确 定</el-button>
+      </span>
+    </el-dialog>
+
+    <!--  贸易背景上传发票  -->
+    <el-dialog
+      class="trade-bg-upload-invoice"
+      :center="true"
+      :show-close="false"
+      title="上传发票"
+      :visible.sync="tradeBgUploadInvoiceDialogVisible"
+      width="65%"
+    >
+      <div class="btns">
+        <el-button @click="$refs.invoiceFile.click()">导入文件</el-button>
+        <input ref="invoiceFile" type="file" style="display: none;" @change="handleTradeBgUploadInvoiceChange" />
+        <el-button @click="handleDownloadTradeBgTemplateFile">模板下载</el-button>
+        <el-button @click="handleCheckTradeBgInvoice">发票查验</el-button>
+      </div>
+      <el-form
+        v-if="openTradeBgDialogRow.$index >=0 && tradeBgForm.tradeBgInfos[openTradeBgDialogRow.$index].invoiceInfoForm"
+        ref="tradeBgUploadInvoiceForm"
+        :model="tradeBgForm.tradeBgInfos[openTradeBgDialogRow.$index].invoiceInfoForm"
+        label-width="0"
+      >
+        <el-table
+          :data="tradeBgForm.tradeBgInfos[openTradeBgDialogRow.$index].invoiceInfoForm.infos"
+          style="width: 100%"
+          border
+          header-row-class-name="table-header"
+        >
+          <el-table-column label="序号" width="55">
+            <template v-slot="{$index}">
+              {{ $index + 1 }}
+            </template>
+          </el-table-column>
+          <el-table-column prop="invoiceCode" label="发票代码" show-overflow-tooltip>
+            <template v-slot="{row, $index}">
+              <el-form-item :prop="'infos['+$index+'].invoiceCode'">
+                <el-input
+                  v-model="row.invoiceCode"
+                  :disabled="tradeBgForm.tradeBgUploadInvoiceFormDisabled"
+                ></el-input>
+              </el-form-item>
+            </template>
+          </el-table-column>
+          <el-table-column prop="invoiceNumber" label="发票号码" show-overflow-tooltip>
+            <template v-slot="{row, $index}">
+              <el-form-item :prop="'infos['+$index+'].invoiceNumber'">
+                <el-input
+                  v-model="row.invoiceNumber"
+                  :disabled="tradeBgForm.tradeBgUploadInvoiceFormDisabled"
+                ></el-input>
+              </el-form-item>
+            </template>
+          </el-table-column>
+          <el-table-column prop="kprq" label="开票日期" show-overflow-tooltip>
+            <template v-slot="{row, $index}">
+              <el-form-item :prop="'infos['+$index+'].kprq'">
+                <el-input
+                  v-model="row.kprq"
+                  :disabled="tradeBgForm.tradeBgUploadInvoiceFormDisabled"
+                ></el-input>
+              </el-form-item>
+            </template>
+          </el-table-column>
+          <el-table-column prop="invoiceMoney" label="发票金额" show-overflow-tooltip>
+            <template v-slot="{row, $index}">
+              <el-form-item :prop="'infos['+$index+'].invoiceMoney'">
+                <el-input
+                  v-model="row.invoiceMoney"
+                  class="money-txt"
+                  :disabled="tradeBgForm.tradeBgUploadInvoiceFormDisabled"
+                ></el-input>
+              </el-form-item>
+            </template>
+          </el-table-column>
+          <el-table-column prop="checkCode" label="校验码" show-overflow-tooltip>
+            <template v-slot="{row, $index}">
+              <el-form-item :prop="'infos['+$index+'].checkCode'">
+                <el-input
+                  v-model="row.checkCode"
+                  :disabled="tradeBgForm.tradeBgUploadInvoiceFormDisabled"
+                ></el-input>
+              </el-form-item>
+            </template>
+          </el-table-column>
+          <el-table-column prop="checked" label="查验结果" show-overflow-tooltip>
+            <template v-slot="{row, $index}">
+              {{ row.checked.length === 0 ? '' : row.checked === '0' ? '查验不通过': '查验通过' }}
+            </template>
+          </el-table-column>
+          <el-table-column label="操作">
+            <template v-slot="{$index, row}">
+              <el-button type="text" @click="handleAddTradeBgUploadInvoiceRow($index, row)">添加</el-button>
+              <el-button type="text" class="delete-btn" @click="handleDeleteTradeBgUploadInvoiceRow($index, row)">删除
+              </el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="handleTradeBgUploadInvoiceClose">取 消</el-button>
+        <el-button type="primary" @click="tradeBgUploadInvoiceDialogVisible = false">确 定</el-button>
+      </span>
+    </el-dialog>
+
+    <!--  贸易背景查看发票  -->
+    <el-dialog
+      class="trade-bg-view-invoice"
+      :center="true"
+      :show-close="false"
+      title="查看发票"
+      :visible.sync="tradeBgViewInvoiceDialogVisible"
+      width="65%"
+    >
+      <el-table
+        v-if="openTradeBgDialogRow.$index >=0 && tradeBgForm.tradeBgInfos[openTradeBgDialogRow.$index].invoiceInfoForm"
+        :data="tradeBgForm.tradeBgInfos[openTradeBgDialogRow.$index].invoiceInfoForm.infos"
+        style="width: 100%"
+        border
+        header-row-class-name="table-header"
+      >
+        <el-table-column label="序号" width="55">
+          <template v-slot="{$index}">
+            {{ $index + 1 }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="invoiceCode" label="发票代码" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="invoiceNumber" label="发票号码" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="kprq" label="开票日期" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="invoiceMoney" label="发票金额" show-overflow-tooltip align="right"></el-table-column>
+        <el-table-column prop="checkCode" label="校验码" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="checked" label="查验结果" show-overflow-tooltip>
+          <template v-slot="{row, $index}">
+            {{ row.checked.length === 0 ? '' : row.checked === '0' ? '查验不通过': '查验通过' }}
+          </template>
+        </el-table-column>
+        <el-table-column label="操作">
+          <template v-slot="{$index, row}">
+            <el-button type="text" @click="handleClickInvoice($index, row)">查看</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="tradeBgViewInvoiceDialogVisible = false">确 定</el-button>
+      </span>
+    </el-dialog>
+
+    <!--  贸易背景 确权凭证  -->
+    <el-dialog
+      :center="true"
+      :show-close="false"
+      title="查看附件"
+      :visible.sync="tradebgViewTokenFileDialogVisible"
+      width="30%"
+    >
+      <el-table
+        v-if="openTradeBgDialogRow.$index >= 0 && tradeBgForm.tradeBgInfos[openTradeBgDialogRow.$index]"
+        :data="tradeBgForm.tradeBgInfos[openTradeBgDialogRow.$index].tokenFiles"
+        style="width:100%"
+      >
+        <el-table-column prop="file" label="文件名" width="180">
+          <template v-slot="{row}">
+            {{ row.file.name }}
+          </template>
+        </el-table-column>
+        <el-table-column label="操作">
+          <template v-slot="{$index, row}">
+            <el-button type="text" @click="handleDownloadTradeContractFile($index, row)">下载</el-button>
+            <el-button type="text" class="delete-btn" @click="handleDeleteTradeContractFile($index, row)">删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="tradebgViewTokenFileDialogVisible = false">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
+import { cloneDeep } from 'lodash'
+
 export default {
   name: 'TempIndex',
   data() {
     return {
-      form: {
-        tradeNO: '2020010601',
-        bebitEnterpriseName: '企业A',
-        bebitNsrsbh: '911400000000000001',
-        bebitMobile: '地址、电话/手机号',
-        bebitBankNumber: '开户行及账号'
-      },
-      tradeContractForm: {
-        tradeContractFormDisabled: true,
-        tradeContractInfos: [
-          {
-            tradeContractNo: '2020-01-10-15-10-11',
-            buyer: '买方1',
-            seller: '卖方1',
-            contractPayTimes: '2',
-            contractMoney: '111.00'
-          },
-          {
-            tradeContractNo: '2020-01-15-19-19-19',
-            buyer: '买方2',
-            seller: '卖方2',
-            contractPayTimes: '5',
-            contractMoney: '8888888.00'
-          }
-        ]
-      },
       options: {
         transferOptions: [
           { code: '0', value: '未确定' },
@@ -396,8 +649,100 @@ export default {
           { code: '1', value: '是' }
         ]
       },
+      inlineForm: {
+        applyId: '',
+        authorizationNo: ''
+      },
+      form: {
+        // tradeNO: '2020010601',
+        // debitEnterpriseName: '企业A',
+        // debitNsrsbh: '911400000000000001',
+        // debitMobile: '地址、电话/手机号',
+        // debitBankNumber: '开户行及账号',
+        // financeEnterpriseName: '111111111111111111',
+        // financeNsrsbh: '111111111111111111',
+        // financeMobile: '111111111111111111',
+        // financeBankNumber: '111111111111111111',
+        tradeNO: '',
+        debitEnterpriseName: '',
+        debitNsrsbh: '',
+        debitMobile: '',
+        debitBankNumber: '',
+        financeEnterpriseName: '',
+        financeNsrsbh: '',
+        financeMobile: '',
+        financeBankNumber: ''
+      },
+      openTradeContractDialogRow: {
+        $index: -1
+      },
+      tradeContractForm: {
+        tradeContractFormDisabled: true,
+        tradeContractInfos: [
+          {
+            tradeContractNo: '2020-01-10-15-10-11',
+            buyer: '买方1',
+            seller: '卖方1',
+            contractPayTimes: '2',
+            contractMoney: '111.00',
+            tradeContractFiles: [
+              {
+                id: 0,
+                file: { name: 'xxx1' },
+                url: '/static/file/贸易合同书.doc'
+              }
+            ]
+          },
+          {
+            tradeContractNo: '2020-01-15-19-19-19',
+            buyer: '买方2',
+            seller: '卖方2',
+            contractPayTimes: '5',
+            contractMoney: '8888888.00',
+            tradeContractFiles: []
+          }
+        ],
+        tradeContractEmptyInfo: {
+          tradeContractNo: '',
+          buyer: '',
+          seller: '',
+          contractPayTimes: '',
+          contractMoney: '',
+          tradeContractFiles: []
+        }
+      },
+      openTradeBgDialogRow: {
+        $index: -1
+      },
       tradeBgForm: {
         tradeBgFormDisabled: false,
+        tradeBgUploadInvoiceFormDisabled: false,
+        invoiceEmptyInfo: {
+          invoiceCode: '',
+          invoiceNumber: '',
+          kprq: '',
+          invoiceMoney: '',
+          checkCode: '',
+          checked: ''
+        },
+        tradeBgEmptyInfo: {
+          tradeContractNo: '',
+          payNode: '',
+          payNodeMoney: '',
+          proportion: '',
+          number: '',
+          transfer: '0',
+          finishPay: '1',
+          invoiceNum: 0,
+          invoiceMoney: '',
+          applyId: '',
+          invoiceInfoForm: {
+            infos: []
+          },
+          tokenFiles: []
+        },
+        // 用来保存临时的上传发票
+        invoiceInfoTempForm: {},
         tradeBgInfos: [
           {
             tradeContractNo: '2020-01-10-15-10-11',
@@ -409,7 +754,24 @@ export default {
             finishPay: '1',
             invoiceNum: 3,
             invoiceMoney: '1111.00',
-            applyId: 'afdsf-baa1234'
+            applyId: 'afdsf-baa1234',
+            invoiceInfoForm: {
+              infos: [
+                {
+                  invoiceCode: '1231231',
+                  invoiceNumber: '1231231',
+                  kprq: '2020-01-10',
+                  invoiceMoney: '1111.00',
+                  checkCode: '1111.00',
+                  checked: '0'
+                }
+              ]
+            },
+            tokenFiles: [
+              {
+                file: { name: 'xxx1' }
+              }
+            ]
           },
           {
             tradeContractNo: '2020-01-10-15-10-11',
@@ -421,7 +783,15 @@ export default {
             finishPay: '0',
             invoiceNum: 2,
             invoiceMoney: '8811.00',
-            applyId: 'uwisk892-baa1234'
+            applyId: 'uwisk892-baa1234',
+            invoiceInfoForm: {
+              infos: []
+            },
+            tokenFiles: [
+              {
+                file: { name: 'xxx1' }
+              }
+            ]
           }
         ]
       },
@@ -445,33 +815,187 @@ export default {
         ]
       },
       fileForm: {
+        // 授权书
         authorizationFileDisabled: false,
         authorizationFiles: [
-          // {
-          //   fileName: 'xxx1',
-          //   authorizationNo: 'xxxxx1231'
-          // }
+          {
+            file: { name: 'xxx1' },
+            authorizationNo: 'xxxxx1231',
+            url: '/static/files/授权书.doc'
+          }
         ],
+        // 附件
         appendixFileDisabled: false,
         appendixFiles: [
-          // {
-          //   fileName: 'xxx1',
-          //   authorizationNo: 'xxxxx1231'
-          // }
+          {
+            file: { name: 'xxx1' }
+          }
         ]
-      }
+      },
+      // 申请码 dialog
+      applyCodeDialogVisible: false,
+      // 贸易合同附件 dialog
+      tradeContractFileDialogVisible: false,
+      // 贸易背景上传发票 dialog
+      tradeBgUploadInvoiceDialogVisible: false,
+      // 贸易背景查看发票 dialog
+      tradeBgViewInvoiceDialogVisible: false,
+      // 贸易背景确权凭证 dialog
+      tradebgViewTokenFileDialogVisible: false
     }
   },
   methods: {
     handleReset() {
-
+      this.$refs.inlineForm && this.$refs.inlineForm.resetFields()
+      this.$refs.form && this.$refs.form.resetFields()
+      this.fileForm.appendixFiles = this.fileForm.authorizationFiles = []
+      this.tradeContractForm.tradeContractInfos = [cloneDeep(this.tradeContractForm.tradeContractEmptyInfo)]
+    },
+    // 添加贸易合同行
+    handleAddtradeContractRow($index) {
+      const emptyInfo = cloneDeep(this.tradeContractForm.tradeContractEmptyInfo)
+      this.tradeContractForm.tradeContractInfos.splice($index + 1, 0, emptyInfo)
+    },
+    // 删除贸易合同行
+    handleDeleteTradeContractRow($index) {
+      const infos = this.tradeContractForm.tradeContractInfos
+      if (infos.length === 1) {
+        const emptyInfo = cloneDeep(this.tradeContractForm.tradeContractEmptyInfo)
+        infos.splice($index, 1, emptyInfo)
+      } else {
+        infos.splice($index, 1)
+      }
+    },
+    // 打开上传文件框
+    handleOpenTradeContractUpload($index) {
+      this.openTradeContractDialogRow.$index = $index
+      this.$refs.tradeContractFile.click()
+    },
+    // 上传贸易合同附件
+    handleTradeContractUploadChange(e) {
+      const { $index } = this.openTradeContractDialogRow
+      const tradeContractFiles = this.tradeContractForm.tradeContractInfos[$index].tradeContractFiles
+      e.target.files.forEach(file => {
+        tradeContractFiles.push({
+          file: file,
+          url: '/static/file/贸易合同书.doc'
+        })
+      })
+    },
+    // 查看贸易合同附件
+    handleViewTradeContractFile($index, row) {
+      this.tradeContractFileDialogVisible = true
+      this.openTradeContractDialogRow = { $index, ...row }
+    },
+    // 删除贸易合同附件
+    handleDeleteTradeContractFile($index, { id }) {
+      const rowIndex = this.openTradeContractDialogRow.$index
+      this.tradeContractForm.tradeContractInfos[rowIndex].tradeContractFiles.splice($index, 1)
+    },
+    // 下载贸易合同附件
+    handleDownloadTradeContractFile($index, { id }) {
+      const rowIndex = this.openTradeContractDialogRow.$index
+      location.href = this.tradeContractForm.tradeContractInfos[rowIndex].tradeContractFiles[$index].url
+    },
+    // 打开贸易背景上传发票Diglog
+    handleViewTradeBgUploadInvoice($index, row) {
+      this.openTradeBgDialogRow = { $index, ...row }
+      this.tradeBgForm.invoiceInfoTempForm = cloneDeep(this.tradeBgForm.tradeBgInfos[$index].invoiceInfoForm)
+      this.tradeBgUploadInvoiceDialogVisible = true
+    },
+    // 贸易背景上传发票
+    handleTradeBgUploadInvoiceChange(e) {
+      const { $index } = this.openTradeBgDialogRow
+      this.tradeBgForm.tradeBgInfos[$index].invoiceInfoForm.infos.push({
+        invoiceCode: '1231231',
+        invoiceNumber: '1231231',
+        kprq: '2020-01-10',
+        invoiceMoney: '1111.00',
+        checkCode: '1111.00',
+        checked: '0'
+      })
+    },
+    // 贸易背景模板文件下载
+    handleDownloadTradeBgTemplateFile() {
+      location.href = '/static/files/发票导入模板文件.doc'
+    },
+    // 贸易背景发票查验
+    handleCheckTradeBgInvoice() {
+      const rowIndex = this.openTradeBgDialogRow.$index
+      this.tradeBgForm.tradeBgInfos[rowIndex].invoiceInfoForm.infos.forEach(item => {
+        item.checked = '1'
+      })
+    },
+    // 贸易背景添加发票行
+    handleAddTradeBgUploadInvoiceRow($index) {
+      const emptyInfo = cloneDeep(this.tradeBgForm.invoiceEmptyInfo)
+      const rowIndex = this.openTradeBgDialogRow.$index
+      this.tradeBgForm.tradeBgInfos[rowIndex].invoiceInfoForm.infos.splice($index + 1, 0, emptyInfo)
+    },
+    // 贸易背景删除发票行
+    handleDeleteTradeBgUploadInvoiceRow($index) {
+      const rowIndex = this.openTradeBgDialogRow.$index
+      const infos = this.tradeBgForm.tradeBgInfos[rowIndex].invoiceInfoForm.infos
+      if (infos.length === 1) {
+        const emptyInfo = cloneDeep(this.tradeBgForm.invoiceEmptyInfo)
+        infos.splice($index, 1, emptyInfo)
+      } else {
+        infos.splice($index, 1)
+      }
+    },
+    // 贸易背景上传发票 取消按钮
+    handleTradeBgUploadInvoiceClose() {
+      this.tradeBgUploadInvoiceDialogVisible = false
+      const rowIndex = this.openTradeBgDialogRow.$index
+      this.tradeBgForm.tradeBgInfos[rowIndex].invoiceInfoForm = this.tradeBgForm.invoiceInfoTempForm
+    },
+    // 贸易背景查看发票
+    handleViewTradeBgInvoice($index, row) {
+      this.tradeBgViewInvoiceDialogVisible = true
+      this.openTradeBgDialogRow = { $index, ...row }
+    },
+    // todo 跳转查看发票
+    handleClickInvoice($index) {
+    },
+    // 打开上传确权凭证框
+    handleTradeBgTokenFileUpload($index) {
+      this.openTradeBgDialogRow.$index = $index
+      this.$refs.tradeBgTokenFile.click()
+    },
+    // 上传确权凭证
+    handleTradeBgTokenFileChange(e) {
+      const rowIndex = this.openTradeBgDialogRow.$index
+      const tokenFiles = this.tradeBgForm.tradeBgInfos[rowIndex].tokenFiles
+      e.target.files.forEach(file => {
+        tokenFiles.push(
+          { file }
+        )
+      })
+    },
+    // 贸易背景 查看确权凭证
+    handleViewTokenFile($index, row) {
+      this.tradebgViewTokenFileDialogVisible = true
+      this.openTradeBgDialogRow = { $index, ...row }
+    },
+    handleAddTradeBgRow($index, row) {
+      const emptyInfo = cloneDeep(this.tradeBgForm.tradeBgEmptyInfo)
+      this.tradeBgForm.tradeBgInfos.splice($index + 1, 0, emptyInfo)
+    },
+    handleDeleteTradeBgRow($index, row) {
+      const infos = this.tradeBgForm.tradeBgInfos
+      if (infos.length === 1) {
+        const emptyInfo = cloneDeep(this.tradeBgForm.tradeBgEmptyInfo)
+        infos.splice($index, 1, emptyInfo)
+      } else {
+        infos.splice($index, 1)
+      }
     },
     // 上传授权书
     handleAuthorizationUploadChange(e) {
       const authorizationFiles = this.fileForm.authorizationFiles
       e.target.files.forEach(file => {
         authorizationFiles.push({
-          fileName: file.name,
+          file,
           authorizationNo: ''
         })
       })
@@ -481,7 +1005,7 @@ export default {
       const appendixFiles = this.fileForm.appendixFiles
       e.target.files.forEach(file => {
         appendixFiles.push({
-          fileName: file.name,
+          file,
           authorizationNo: ''
         })
       })
@@ -491,8 +1015,11 @@ export default {
 </script>
 
 <style scoped lang="scss">
+  $bgColor: #cccccc;
+
   .view-apply {
     padding: 20px;
+    /* 顶部按钮 */
     .top-btns {
       overflow: hidden;
       /deep/ .el-button {
@@ -501,24 +1028,48 @@ export default {
       }
     }
 
+    .inline-form {
+      position: relative;
+      padding-left: 228px;
+      /deep/ .el-form-item {
+        display: inline-block;
+        width: 50%;
+        margin-right: 0;
+      }
+      .authorization-no {
+        /deep/ .el-form-item__content {
+          width: calc(100% - 86px)
+        }
+      }
+      .apply-code-btn {
+        width: 100px;
+        position: absolute;
+        right: -150px;
+        top: 0;
+      }
+    }
+
+    /* 公共table样式 */
+    /deep/ .el-table {
+      .money-txt input {
+        text-align: right;
+      }
+      .center-txt {
+        text-align: center;
+      }
+      .table-header {
+        th {
+          background-color: $bgColor;
+        }
+      }
+    }
+
     .table-wrapper {
       margin-bottom: 30px;
       .table-title {
         margin-bottom: 8px;
       }
-      /deep/ .el-table {
-        .money-txt input {
-          text-align: right;
-        }
-        .center-txt {
-          text-align: center;
-        }
-        .table-header {
-          th {
-            background-color: #cccccc;
-          }
-        }
-      }
+
     }
 
     .upload-wrapper {
@@ -529,6 +1080,23 @@ export default {
 
     .bottom-wrapper {
       padding-top: 40px;
+    }
+
+    /deep/ .el-dialog {
+      .el-dialog__header {
+        background-color: $bgColor;
+      }
+      .delete-btn {
+        margin-left: 30px;
+      }
+      .btns {
+        overflow: hidden;
+        .el-button {
+          float: left;
+          margin-right: 20px;
+          margin-bottom: 10px;
+        }
+      }
     }
   }
 </style>
