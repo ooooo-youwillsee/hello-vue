@@ -1,50 +1,55 @@
 <template>
   <div class="view-apply">
+    <!--  顶部按钮  -->
     <div class="top-btns">
       <el-button @click="$router.go(-1)">返回</el-button>
       <el-button @click="handleReset">重置</el-button>
     </div>
+
     <!--  顶部表单  -->
     <el-row class="form-wrapper">
       <el-col :span="16">
         <el-form ref="inlineForm" class="inline-form" :inline="true" :model="inlineForm">
-          <el-form-item label="申请码ID:" prop="applyId">
-            <el-input v-model="inlineForm.applyId"></el-input>
+          <el-form-item label="申请码ID:" class="apply-id" prop="applyId">
+            <el-input v-model="inlineForm.applyId" />
           </el-form-item>
           <el-form-item label="授权书编号:" class="authorization-no" prop="authorizationNo">
-            <el-input v-model="inlineForm.authorizationNo"></el-input>
+            <el-input v-model="inlineForm.authorizationNo" />
           </el-form-item>
           <el-form-item class="apply-code-btn">
             <el-button @click="applyCodeDialogVisible = true">查看申请码</el-button>
           </el-form-item>
+          <el-form-item class="read-apply-code-btn">
+            <el-button @click="readApplyCodeDialogVisible = true">读入申请码数据</el-button>
+          </el-form-item>
         </el-form>
-        <el-form ref="form" :model="form" label-width="300px">
+        <el-form ref="form" :model="form" label-width="300px" :rules="rules">
           <el-form-item label="贸易信息单号:" prop="tradeNO">
-            <el-input v-model="form.tradeNO"></el-input>
+            <el-input v-model="form.tradeNO" :disabled="form.disabled" />
           </el-form-item>
           <el-form-item label="借方企业名称/姓名:" prop="debitEnterpriseName">
-            <el-input v-model="form.debitEnterpriseName"></el-input>
+            <el-input v-model="form.debitEnterpriseName" :disabled="form.disabled" />
           </el-form-item>
           <el-form-item label="借方统一社会信用代码/身份证号:" prop="debitNsrsbh">
-            <el-input v-model="form.debitNsrsbh"></el-input>
+            <el-input v-model="form.debitNsrsbh" :disabled="form.disabled" />
           </el-form-item>
           <el-form-item label="借方地址、电话/手机号:" prop="debitMobile">
-            <el-input v-model="form.debitMobile"></el-input>
+            <el-input v-model="form.debitMobile" :disabled="form.disabled" />
           </el-form-item>
           <el-form-item label="借方开户行及账号:" prop="debitBankNumber">
-            <el-input v-model="form.debitBankNumber"></el-input>
+            <el-input v-model="form.debitBankNumber" :disabled="form.disabled" />
           </el-form-item>
           <el-form-item label="融出方名称:" prop="financeEnterpriseName">
-            <el-input v-model="form.financeEnterpriseName"></el-input>
+            <el-input v-model="form.financeEnterpriseName" :disabled="form.disabled" />
           </el-form-item>
           <el-form-item label="融出方统一社会信用代码:" prop="financeNsrsbh">
-            <el-input v-model="form.financeNsrsbh"></el-input>
+            <el-input v-model="form.financeNsrsbh" :disabled="form.disabled" />
           </el-form-item>
           <el-form-item label="融出方地址、电话:" prop="financeMobile">
-            <el-input v-model="form.financeMobile"></el-input>
+            <el-input v-model="form.financeMobile" :disabled="form.disabled" />
           </el-form-item>
           <el-form-item label="融出方开户行及账号:" prop="financeBankNumber">
-            <el-input v-model="form.financeBankNumber"></el-input>
+            <el-input v-model="form.financeBankNumber" :disabled="form.disabled" />
           </el-form-item>
         </el-form>
       </el-col>
@@ -53,71 +58,86 @@
     <!--  贸易合同信息  -->
     <div class="table-wrapper">
       <h4 class="table-title">贸易合同信息</h4>
-      <el-form ref="tradeContractForm" :model="tradeContractForm" label-width="0">
+      <el-form ref="tradeContractTableForm" :model="tradeContractForm" label-width="0">
         <el-table :data="tradeContractForm.tradeContractInfos" border header-row-class-name="table-header">
-          <el-table-column label="序号">
+          <el-table-column label="序号" width="55">
             <template v-slot="{$index}">
               {{ $index + 1 }}
             </template>
           </el-table-column>
           <el-table-column prop="tradeContractNo" label="贸易合同号" show-overflow-tooltip>
             <template v-slot="{row, $index}">
-              <el-form-item :prop="'tradeContractInfos['+$index+'].tradeContractNo'">
+              <el-form-item
+                :prop="'tradeContractInfos['+$index+'].tradeContractNo'"
+                :rules="tradeContractRules.tradeContractNo"
+              >
                 <el-input
-                  v-model="row.tradeContractNo"
+                  v-model="tradeContractForm.tradeContractInfos[$index].tradeContractNo"
                   :disabled="tradeContractForm.tradeContractFormDisabled"
-                ></el-input>
+                />
               </el-form-item>
             </template>
           </el-table-column>
           <el-table-column prop="buyer" label="买方" width="180" show-overflow-tooltip>
             <template v-slot="{row, $index}">
-              <el-form-item :prop="'tradeContractInfos['+$index+'].buyer'">
+              <el-form-item
+                :prop="'tradeContractInfos['+$index+'].buyer'"
+                :rules="tradeContractRules.buyer"
+              >
                 <el-input
                   v-model="row.buyer"
                   :disabled="tradeContractForm.tradeContractFormDisabled"
-                ></el-input>
+                />
               </el-form-item>
             </template>
           </el-table-column>
           <el-table-column prop="seller" label="卖方" width="180" show-overflow-tooltip>
             <template v-slot="{row, $index}">
-              <el-form-item :prop="'tradeContractInfos['+$index+'].seller'">
+              <el-form-item
+                :prop="'tradeContractInfos['+$index+'].seller'"
+                :rules="tradeContractRules.seller"
+              >
                 <el-input
                   v-model="row.seller"
                   :disabled="tradeContractForm.tradeContractFormDisabled"
-                ></el-input>
+                />
               </el-form-item>
             </template>
           </el-table-column>
           <el-table-column prop="contractPayTimes" label="合同内付款次数" show-overflow-tooltip>
             <template v-slot="{row, $index}">
-              <el-form-item :prop="'tradeContractInfos['+$index+'].contractPayTimes'">
+              <el-form-item
+                :prop="'tradeContractInfos['+$index+'].contractPayTimes'"
+                :rules="tradeContractRules.contractPayTimes"
+              >
                 <el-input
                   v-model="row.contractPayTimes"
                   :disabled="tradeContractForm.tradeContractFormDisabled"
-                ></el-input>
+                />
               </el-form-item>
             </template>
           </el-table-column>
           <el-table-column prop="contractMoney" label="合同金额" show-overflow-tooltip>
             <template v-slot="{row, $index}">
-              <el-form-item :prop="'tradeContractInfos['+$index+'].contractMoney'">
+              <el-form-item
+                :prop="'tradeContractInfos['+$index+'].contractMoney'"
+                :rules="tradeContractRules.contractMoney"
+              >
                 <el-input
                   v-model="row.contractMoney"
                   class="money-txt"
                   :disabled="tradeContractForm.tradeContractFormDisabled"
-                ></el-input>
+                />
               </el-form-item>
             </template>
           </el-table-column>
-          <el-table-column label="操作" align="center" width="200">
+          <el-table-column label="操作" align="center" width="300">
             <template v-slot="{$index, row}">
-              <el-button @click="handleOpenTradeContractUpload($index)">上传贸易合同
+              <el-button type="text" @click="handleOpenTradeContractUpload($index)">上传贸易合同
               </el-button>
-              <el-button @click="handleViewTradeContractFile($index, row)">查看</el-button>
-              <el-button @click="handleAddtradeContractRow($index)">添加</el-button>
-              <el-button @click="handleDeleteTradeContractRow($index)">删除</el-button>
+              <el-button type="text" @click="handleViewTradeContractFile($index, row)">查看</el-button>
+              <el-button type="text" @click="handleAddTradeContractRow($index)">添加</el-button>
+              <el-button type="text" @click="handleDeleteTradeContractRow($index)">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -126,74 +146,89 @@
           type="file"
           style="display: none;"
           @change="handleTradeContractUploadChange"
-        />
+        >
       </el-form>
     </div>
 
     <!--  贸易背景信息  -->
     <div class="table-wrapper">
       <h4 class="table-title">贸易背景信息</h4>
-      <el-form ref="tradeBgForm" :model="tradeBgForm" label-width="0">
+      <el-form ref="tradeBgTableForm" :model="tradeBgForm" label-width="0">
         <el-table :data="tradeBgForm.tradeBgInfos" style="width: 100%" border header-row-class-name="table-header">
-          <el-table-column type="selection" width="55"></el-table-column>
+          <el-table-column type="selection" width="55" />
           <el-table-column label="序号" width="55">
             <template v-slot="{$index}">
               {{ $index + 1 }}
             </template>
           </el-table-column>
-          <el-table-column prop="tradeContractNo" label="贸易合同号" show-overflow-tooltip>
+          <el-table-column prop="tradeContractNo" label="贸易合同号" show-overflow-tooltip width="150">
             <template v-slot="{row, $index}">
-              <el-form-item :prop="'tradeBgInfos['+$index+'].tradeContractNo'">
+              <el-form-item
+                :prop="'tradeBgInfos['+$index+'].tradeContractNo'"
+                :rules="tradeBgRules.tradeContractNo"
+              >
                 <el-input
                   v-model="row.tradeContractNo"
                   :disabled="tradeBgForm.tradeBgFormDisabled"
-                ></el-input>
+                />
               </el-form-item>
             </template>
           </el-table-column>
-          <el-table-column prop="payNode" label="付款节点" show-overflow-tooltip>
+          <el-table-column prop="payNode" label="付款节点" show-overflow-tooltip width="120">
             <template v-slot="{row, $index}">
-              <el-form-item :prop="'tradeBgInfos['+$index+'].payNode'">
+              <el-form-item
+                :prop="'tradeBgInfos['+$index+'].payNode'"
+                :rules="tradeBgRules.payNode"
+              >
                 <el-input
                   v-model="row.payNode"
                   :disabled="tradeBgForm.tradeBgFormDisabled"
-                ></el-input>
+                />
               </el-form-item>
             </template>
           </el-table-column>
-          <el-table-column prop="payNodeMoney" label="付款节点金额" show-overflow-tooltip>
+          <el-table-column prop="payNodeMoney" label="付款节点金额" show-overflow-tooltip width="120">
             <template v-slot="{row, $index}">
-              <el-form-item :prop="'tradeBgInfos['+$index+'].payNodeMoney'">
+              <el-form-item
+                :prop="'tradeBgInfos['+$index+'].payNodeMoney'"
+                :rules="tradeBgRules.payNodeMoney"
+              >
                 <el-input
                   v-model="row.payNodeMoney"
                   class="money-txt"
                   :disabled="tradeBgForm.tradeBgFormDisabled"
-                ></el-input>
+                />
               </el-form-item>
             </template>
           </el-table-column>
-          <el-table-column prop="proportion" label="占合同金额比例" width="90">
+          <el-table-column prop="proportion" label="占合同金额比例" width="120">
             <template v-slot="{row, $index}">
-              <el-form-item :prop="'tradeBgInfos['+$index+'].proportion'">
+              <el-form-item
+                :prop="'tradeBgInfos['+$index+'].proportion'"
+                :rules="tradeBgRules.proportion"
+              >
                 <el-input
                   v-model="row.proportion"
                   :disabled="tradeBgForm.tradeBgFormDisabled"
-                ></el-input>
+                />
               </el-form-item>
             </template>
           </el-table-column>
-          <el-table-column prop="number" label="确权凭证编号" show-overflow-tooltip>
+          <el-table-column prop="number" label="确权凭证编号" show-overflow-tooltip width="120">
             <template v-slot="{row, $index}">
-              <el-form-item :prop="'tradeBgInfos['+$index+'].number'">
+              <el-form-item
+                :prop="'tradeBgInfos['+$index+'].number'"
+                :rules="tradeBgRules.number"
+              >
                 <el-input
                   v-model="row.number"
                   class="money-txt"
                   :disabled="tradeBgForm.tradeBgFormDisabled"
-                ></el-input>
+                />
               </el-form-item>
             </template>
           </el-table-column>
-          <el-table-column prop="transfer" label="确权凭证是否可转让" width="120px" show-overflow-tooltip>
+          <el-table-column prop="transfer" label="确权凭证是否可转让" width="130" show-overflow-tooltip>
             <template v-slot="{row, $index}">
               <el-form-item :prop="'tradeBgInfos['+$index+'].transfer'">
                 <el-select v-model="row.transfer" :disabled="tradeBgForm.tradeBgFormDisabled">
@@ -202,13 +237,12 @@
                     :key="index"
                     :label="item.value"
                     :value="item.code"
-                  >
-                  </el-option>
+                  />
                 </el-select>
               </el-form-item>
             </template>
           </el-table-column>
-          <el-table-column prop="finishPay" label="是否完成付款" width="90px" show-overflow-tooltip>
+          <el-table-column prop="finishPay" label="是否完成付款" width="100" show-overflow-tooltip>
             <template v-slot="{row, $index}">
               <el-form-item :prop="'tradeBgInfos['+$index+'].finishPay'">
                 <el-select v-model="row.finishPay" :disabled="tradeBgForm.tradeBgFormDisabled">
@@ -217,7 +251,7 @@
                     :key="index"
                     :label="item.value"
                     :value="item.code"
-                  ></el-option>
+                  />
                 </el-select>
               </el-form-item>
             </template>
@@ -228,41 +262,41 @@
                 <el-input
                   v-model="row.invoiceNum"
                   :disabled="tradeBgForm.tradeBgFormDisabled"
-                ></el-input>
+                />
               </el-form-item>
             </template>
           </el-table-column>
-          <el-table-column prop="invoiceMoney" label="发票金额含税价" show-overflow-tooltip>
+          <el-table-column prop="invoiceMoney" label="发票金额含税价" width="110" show-overflow-tooltip>
             <template v-slot="{row, $index}">
               <el-form-item :prop="'tradeBgInfos['+$index+'].invoiceMoney'">
                 <el-input
                   v-model="row.invoiceMoney"
                   class="money-txt"
                   :disabled="tradeBgForm.tradeBgFormDisabled"
-                ></el-input>
+                />
               </el-form-item>
             </template>
           </el-table-column>
-          <el-table-column prop="applyId" label="申请码ID" show-overflow-tooltip>
+          <el-table-column prop="applyId" label="申请码ID" width="120" show-overflow-tooltip>
             <template v-slot="{row, $index}">
               <el-form-item :prop="'tradeBgInfos['+$index+'].applyId'">
                 <el-input
                   v-model="row.applyId"
                   class="money-txt"
                   :disabled="tradeBgForm.tradeBgFormDisabled"
-                ></el-input>
+                />
               </el-form-item>
             </template>
           </el-table-column>
-          <el-table-column label="操作" align="center" width="500">
+          <el-table-column label="操作" align="center" width="400">
             <template v-slot="{$index,row}">
-              <el-button @click="handleViewTradeBgUploadInvoice($index, row)">上传发票</el-button>
-              <el-button @click="handleTradeBgTokenFileUpload($index, row)">上传确权凭证</el-button>
-              <el-button>接口读入确权凭证</el-button>
-              <el-button @click="handleViewTradeBgInvoice($index, row)">查看发票信息</el-button>
-              <el-button @click="handleViewTokenFile($index, row)">查看确权凭证</el-button>
-              <el-button @click="handleDeleteTradeBgRow($index, row)">删除</el-button>
-              <el-button @click="handleAddTradeBgRow($index, row)">添加</el-button>
+              <el-button type="text" @click="handleViewTradeBgUploadInvoice($index, row)">上传发票</el-button>
+              <el-button type="text" @click="handleTradeBgTokenFileUpload($index, row)">上传确权凭证</el-button>
+              <el-button type="text">接口读入确权凭证</el-button>
+              <el-button type="text" @click="handleViewTradeBgInvoice($index, row)">查看发票信息</el-button>
+              <el-button type="text" @click="handleViewTokenFile($index, row)">查看确权凭证</el-button>
+              <el-button type="text" @click="handleDeleteTradeBgRow($index, row)">删除</el-button>
+              <el-button type="text" @click="handleAddTradeBgRow($index, row)">添加</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -271,14 +305,14 @@
           type="file"
           style="display: none;"
           @change="handleTradeBgTokenFileChange"
-        />
+        >
       </el-form>
     </div>
 
     <!--  融资提供方信息  -->
     <div class="table-wrapper">
       <h4 class="table-title">融资提供方信息</h4>
-      <el-form ref="financeProviderForm" :model="financeProviderForm" label-width="0">
+      <el-form ref="financeProviderTableForm" :model="financeProviderForm" label-width="0">
         <el-table
           :data="financeProviderForm.financeProviderInfos"
           style="width: 100%"
@@ -292,95 +326,127 @@
           </el-table-column>
           <el-table-column prop="enterpriseName" label="单位名称" show-overflow-tooltip>
             <template v-slot="{row, $index}">
-              <el-form-item :prop="'financeProviderInfos['+$index+'].enterpriseName'">
+              <el-form-item
+                :prop="'financeProviderInfos['+$index+'].enterpriseName'"
+                :rules="financeProviderRules.enterpriseName"
+              >
                 <el-input
                   v-model="row.enterpriseName"
                   :disabled="financeProviderForm.financeProviderFormDisabled"
-                ></el-input>
+                />
               </el-form-item>
             </template>
           </el-table-column>
           <el-table-column prop="nsrsbh" label="统一社会信用代码" show-overflow-tooltip>
             <template v-slot="{row, $index}">
-              <el-form-item :prop="'financeProviderInfos['+$index+'].nsrsbh'">
+              <el-form-item
+                :prop="'financeProviderInfos['+$index+'].nsrsbh'"
+                :rules="financeProviderRules.nsrsbh"
+              >
                 <el-input
                   v-model="row.nsrsbh"
                   :disabled="financeProviderForm.financeProviderFormDisabled"
-                ></el-input>
+                />
               </el-form-item>
             </template>
           </el-table-column>
           <el-table-column prop="mobile" label="地址、电话" show-overflow-tooltip>
             <template v-slot="{row, $index}">
-              <el-form-item :prop="'financeProviderInfos['+$index+'].mobile'">
+              <el-form-item
+                :prop="'financeProviderInfos['+$index+'].mobile'"
+                :rules="financeProviderRules.mobile"
+              >
                 <el-input
                   v-model="row.mobile"
                   :disabled="financeProviderForm.financeProviderFormDisabled"
-                ></el-input>
+                />
               </el-form-item>
             </template>
           </el-table-column>
           <el-table-column prop="bank" label="开户行及账号" show-overflow-tooltip>
             <template v-slot="{row, $index}">
-              <el-form-item :prop="'financeProviderInfos['+$index+'].bank'">
+              <el-form-item
+                :prop="'financeProviderInfos['+$index+'].bank'"
+                :rules="financeProviderRules.bank"
+              >
                 <el-input
                   v-model="row.bank"
                   :disabled="financeProviderForm.financeProviderFormDisabled"
-                ></el-input>
+                />
               </el-form-item>
             </template>
           </el-table-column>
           <el-table-column prop="authorizationNo" label="授权书编号" show-overflow-tooltip>
             <template v-slot="{row, $index}">
-              <el-form-item :prop="'financeProviderInfos['+$index+'].authorizationNo'">
+              <el-form-item
+                :prop="'financeProviderInfos['+$index+'].authorizationNo'"
+                :rules="financeProviderRules.authorizationNo"
+              >
                 <el-input
                   v-model="row.authorizationNo"
                   :disabled="financeProviderForm.financeProviderFormDisabled"
-                ></el-input>
+                />
               </el-form-item>
             </template>
           </el-table-column>
-          <el-table-column label="操作" align="center" width="500">
-            <el-button>生成授权书</el-button>
-            <el-button>上传授权书</el-button>
-            <el-button>查看</el-button>
-            <el-button>添加</el-button>
-            <el-button>删除</el-button>
+          <el-table-column label="操作" align="center" width="300">
+            <template v-slot="{$index, row}">
+              <el-button type="text">生成授权书</el-button>
+              <el-button type="text" @click="handleOpenFinanceProviderAuthorizationFileUpload($index, row)">上传授权书</el-button>
+              <el-button type="text" @click="handleViewFinanceProviderAuthorizationFile($index, row)">查看</el-button>
+              <el-button type="text" @click="handleAddFinanceProviderRow($index, row)">添加</el-button>
+              <el-button type="text" @click="handleDeleteFinanceProviderRow($index, row)">删除</el-button>
+            </template>
           </el-table-column>
         </el-table>
+        <input
+          ref="financeProviderAuthorizationFile"
+          type="file"
+          style="display: none;"
+          @change="handleFinanceProviderAuthorizationFileChange"
+        >
       </el-form>
     </div>
 
-    <!--   上传区域 -->
+    <!--  上传区域 -->
     <el-row class="upload-wrapper" :gutter="25">
       <el-col :span="12">
         <el-button @click="$refs.authorizationFile.click()">上传授权书</el-button>
-        <input ref="authorizationFile" type="file" style="display: none;" @change="handleAuthorizationUploadChange" />
-        <el-table v-if="fileForm.authorizationFiles.length > 0" :data="fileForm.authorizationFiles" style="width: 100%">
-          <el-table-column prop="file" label="文件名" width="180">
-            <template v-slot="{row}">
-              {{ row.file.name }}
-            </template>
-          </el-table-column>
-          <el-table-column prop="authorizationNo" label="授权书编号" width="180">
-            <template v-slot="{row}">
-              <el-input
-                v-model="row.authorizationNo"
-                :disabled="fileForm.authorizationFileDisabled"
-              ></el-input>
-            </template>
-          </el-table-column>
-          <el-table-column label="操作">
-            <template v-slot="{$index}">
-              <el-button type="text">下载</el-button>
-              <el-button type="text">删除</el-button>
-            </template>
-          </el-table-column>
-        </el-table>
+        <span class="note">请上传盖章后的授权书</span>
+        <el-form ref="authorizationFileTableForm" :model="fileForm" label-width="0">
+          <el-table v-if="fileForm.authorizationFiles.length > 0" :data="fileForm.authorizationFiles" style="width: 100%">
+            <el-table-column prop="file" label="文件名" width="180">
+              <template v-slot="{row}">
+                {{ row.file.name }}
+              </template>
+            </el-table-column>
+            <el-table-column prop="authorizationNo" label="授权书编号" width="180">
+              <template v-slot="{$index, row}">
+                <el-form-item
+                  :prop="'authorizationFiles['+$index+'].authorizationNo'"
+                  :rules="authorizationFileRules.authorizationNo"
+                >
+                  <el-input
+                    v-model="row.authorizationNo"
+                    :disabled="fileForm.authorizationFileDisabled"
+                  />
+                </el-form-item>
+              </template>
+            </el-table-column>
+            <el-table-column label="操作">
+              <template v-slot="{$index}">
+                <el-button type="text" @click="handleDownloadAuthorizationFile($index)">下载</el-button>
+                <el-button type="text" @click="handleDeleteAuthorizationFile($index)">删除</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+          <input ref="authorizationFile" type="file" style="display: none;" @change="handleAuthorizationUploadChange">
+        </el-form>
       </el-col>
       <el-col :span="12" class="appendix-wrapper">
         <el-button @click="$refs.appendixFile.click()">上传附件</el-button>
-        <input ref="appendixFile" type="file" style="display: none;" @change="handleAppendixUploadChange" />
+        <span class="note">如需提交其它资料，请上传</span>
+        <input ref="appendixFile" type="file" style="display: none;" @change="handleAppendixUploadChange">
         <el-table v-if="fileForm.appendixFiles.length > 0" :data="fileForm.appendixFiles" style="width: 100%">
           <el-table-column prop="file" label="文件名" width="180">
             <template v-slot="{row}">
@@ -389,30 +455,30 @@
           </el-table-column>
           <el-table-column label="操作">
             <template v-slot="{$index}">
-              <el-button type="text">下载</el-button>
-              <el-button type="text">删除</el-button>
+              <el-button type="text" @click="handleDownloadAppendixFile($index)">下载</el-button>
+              <el-button type="text" @click="handleDeleteAppendixFile($index)">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
       </el-col>
     </el-row>
 
-    <!--   底部按钮 -->
+    <!--  底部按钮 -->
     <el-row class="bottom-wrapper" type="flex" justify="center">
       <el-col :span="3">
-        <el-button>保存</el-button>
+        <el-button @click="handleSave">保存</el-button>
       </el-col>
       <el-col :span="3">
         <el-button>生成申请码</el-button>
       </el-col>
       <el-col :span="3">
-        <el-button>提交</el-button>
+        <el-button @click="handleSubmit">提交</el-button>
       </el-col>
     </el-row>
 
     <!--  查看申请码  -->
     <el-dialog
-      class="apply-code-dialog"
+      custom-class="apply-code-dialog"
       :center="true"
       :show-close="false"
       title="查看申请码"
@@ -422,6 +488,21 @@
       <span>这是一段信息</span>
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="applyCodeDialogVisible = false">确 定</el-button>
+      </span>
+    </el-dialog>
+
+    <!--  读入申请码数据  -->
+    <el-dialog
+      custom-class="read-apply-code-dialog"
+      :center="true"
+      :show-close="false"
+      title="提示"
+      :visible.sync="readApplyCodeDialogVisible"
+      width="30%"
+    >
+      <span>该录入需要读取的申请码ID和授权书编号!</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="readApplyCodeDialogVisible = false">确 定</el-button>
       </span>
     </el-dialog>
 
@@ -466,13 +547,13 @@
     >
       <div class="btns">
         <el-button @click="$refs.invoiceFile.click()">导入文件</el-button>
-        <input ref="invoiceFile" type="file" style="display: none;" @change="handleTradeBgUploadInvoiceChange" />
+        <input ref="invoiceFile" type="file" style="display: none;" @change="handleTradeBgUploadInvoiceChange">
         <el-button @click="handleDownloadTradeBgTemplateFile">模板下载</el-button>
         <el-button @click="handleCheckTradeBgInvoice">发票查验</el-button>
       </div>
       <el-form
         v-if="openTradeBgDialogRow.$index >=0 && tradeBgForm.tradeBgInfos[openTradeBgDialogRow.$index].invoiceInfoForm"
-        ref="tradeBgUploadInvoiceForm"
+        ref="tradeBgUploadInvoiceTableForm"
         :model="tradeBgForm.tradeBgInfos[openTradeBgDialogRow.$index].invoiceInfoForm"
         label-width="0"
       >
@@ -489,42 +570,54 @@
           </el-table-column>
           <el-table-column prop="invoiceCode" label="发票代码" show-overflow-tooltip>
             <template v-slot="{row, $index}">
-              <el-form-item :prop="'infos['+$index+'].invoiceCode'">
+              <el-form-item
+                :prop="'infos['+$index+'].invoiceCode'"
+                :rules="tradeBgInvoiceRules.invoiceCode"
+              >
                 <el-input
                   v-model="row.invoiceCode"
                   :disabled="tradeBgForm.tradeBgUploadInvoiceFormDisabled"
-                ></el-input>
+                />
               </el-form-item>
             </template>
           </el-table-column>
           <el-table-column prop="invoiceNumber" label="发票号码" show-overflow-tooltip>
             <template v-slot="{row, $index}">
-              <el-form-item :prop="'infos['+$index+'].invoiceNumber'">
+              <el-form-item
+                :prop="'infos['+$index+'].invoiceNumber'"
+                :rules="tradeBgInvoiceRules.invoiceNumber"
+              >
                 <el-input
                   v-model="row.invoiceNumber"
                   :disabled="tradeBgForm.tradeBgUploadInvoiceFormDisabled"
-                ></el-input>
+                />
               </el-form-item>
             </template>
           </el-table-column>
           <el-table-column prop="kprq" label="开票日期" show-overflow-tooltip>
             <template v-slot="{row, $index}">
-              <el-form-item :prop="'infos['+$index+'].kprq'">
+              <el-form-item
+                :prop="'infos['+$index+'].kprq'"
+                :rules="tradeBgInvoiceRules.kprq"
+              >
                 <el-input
                   v-model="row.kprq"
                   :disabled="tradeBgForm.tradeBgUploadInvoiceFormDisabled"
-                ></el-input>
+                />
               </el-form-item>
             </template>
           </el-table-column>
           <el-table-column prop="invoiceMoney" label="发票金额" show-overflow-tooltip>
             <template v-slot="{row, $index}">
-              <el-form-item :prop="'infos['+$index+'].invoiceMoney'">
+              <el-form-item
+                :prop="'infos['+$index+'].invoiceMoney'"
+                :rules="tradeBgInvoiceRules.invoiceMoney"
+              >
                 <el-input
                   v-model="row.invoiceMoney"
                   class="money-txt"
                   :disabled="tradeBgForm.tradeBgUploadInvoiceFormDisabled"
-                ></el-input>
+                />
               </el-form-item>
             </template>
           </el-table-column>
@@ -534,7 +627,7 @@
                 <el-input
                   v-model="row.checkCode"
                   :disabled="tradeBgForm.tradeBgUploadInvoiceFormDisabled"
-                ></el-input>
+                />
               </el-form-item>
             </template>
           </el-table-column>
@@ -554,7 +647,7 @@
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="handleTradeBgUploadInvoiceClose">取 消</el-button>
-        <el-button type="primary" @click="tradeBgUploadInvoiceDialogVisible = false">确 定</el-button>
+        <el-button type="primary" @click="handleTradeBgUploadInvoiceConfirm">确 定</el-button>
       </span>
     </el-dialog>
 
@@ -579,11 +672,11 @@
             {{ $index + 1 }}
           </template>
         </el-table-column>
-        <el-table-column prop="invoiceCode" label="发票代码" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="invoiceNumber" label="发票号码" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="kprq" label="开票日期" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="invoiceMoney" label="发票金额" show-overflow-tooltip align="right"></el-table-column>
-        <el-table-column prop="checkCode" label="校验码" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="invoiceCode" label="发票代码" show-overflow-tooltip />
+        <el-table-column prop="invoiceNumber" label="发票号码" show-overflow-tooltip />
+        <el-table-column prop="kprq" label="开票日期" show-overflow-tooltip />
+        <el-table-column prop="invoiceMoney" label="发票金额" show-overflow-tooltip align="right" />
+        <el-table-column prop="checkCode" label="校验码" show-overflow-tooltip />
         <el-table-column prop="checked" label="查验结果" show-overflow-tooltip>
           <template v-slot="{row, $index}">
             {{ row.checked.length === 0 ? '' : row.checked === '0' ? '查验不通过': '查验通过' }}
@@ -605,7 +698,7 @@
       :center="true"
       :show-close="false"
       title="查看附件"
-      :visible.sync="tradebgViewTokenFileDialogVisible"
+      :visible.sync="tradeBgViewTokenFileDialogVisible"
       width="30%"
     >
       <el-table
@@ -626,7 +719,43 @@
         </el-table-column>
       </el-table>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="tradebgViewTokenFileDialogVisible = false">确 定</el-button>
+        <el-button type="primary" @click="tradeBgViewTokenFileDialogVisible = false">确 定</el-button>
+      </span>
+    </el-dialog>
+
+    <!--  融资提供方 查看授权书  -->
+    <el-dialog
+      :center="true"
+      :show-close="false"
+      title="查看附件"
+      :visible.sync="financeProviderAuthorizationFileDialogVisible"
+      width="30%"
+    >
+      <el-table
+        v-if="openFinanceProviderDialogRow.$index >= 0 && financeProviderForm.financeProviderInfos[openFinanceProviderDialogRow.$index]"
+        :data="financeProviderForm.financeProviderInfos[openFinanceProviderDialogRow.$index].authorizationFiles"
+        style="width:100%"
+      >
+        <el-table-column prop="file" label="文件名" width="180">
+          <template v-slot="{row}">
+            {{ row.file.name }}
+          </template>
+        </el-table-column>
+        <el-table-column label="操作">
+          <template v-slot="{$index, row}">
+            <el-button type="text" @click="handleDownloadFinanceProviderAuthorizationFile($index, row)">下载</el-button>
+            <el-button
+              type="text"
+              class="delete-btn"
+              @click="handleDeleteFinanceProviderAuthorizationFile($index,
+                                                                   row)"
+            >删除
+            </el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="financeProviderAuthorizationFileDialogVisible = false">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -636,9 +765,93 @@
 import { cloneDeep } from 'lodash'
 
 export default {
-  name: 'TempIndex',
+  name: 'ViewApply',
   data() {
     return {
+      rules: {
+        debitEnterpriseName: [
+          { required: true, message: '请输入借方企业名称/姓名', trigger: 'blur' }
+        ],
+        debitNsrsbh: [
+          { required: true, message: '请输入借方统一社会信用代码/身份证号', trigger: 'blur' }
+        ],
+        debitMobile: [
+          { required: true, message: '请输入借方地址、电话/手机号', trigger: 'blur' }
+        ],
+        debitBankNumber: [
+          { required: true, message: '请输入借方开户行及账号', trigger: 'blur' }
+        ]
+      },
+      tradeContractRules: {
+        tradeContractNo: [
+          { required: true, message: '请输入贸易合同号', trigger: 'blur' }
+        ],
+        buyer: [
+          { required: true, message: '请输入买方', trigger: 'blur' }
+        ],
+        seller: [
+          { required: true, message: '请输入卖方', trigger: 'blur' }
+        ],
+        contractPayTimes: [
+          { required: true, message: '请输入付款次数', trigger: 'blur' }
+        ],
+        contractMoney: [
+          { required: true, message: '请输入合同金额', trigger: 'blur' }
+        ]
+      },
+      tradeBgRules: {
+        tradeContractNo: [
+          { required: true, message: '请输入贸易合同号', trigger: 'blur' }
+        ],
+        payNode: [
+          { required: true, message: '请输入付款节点', trigger: 'blur' }
+        ],
+        payNodeMoney: [
+          { required: true, message: '请输入节点金额', trigger: 'blur' }
+        ],
+        proportion: [
+          { required: true, message: '请输入付款占比', trigger: 'blur' }
+        ],
+        number: [
+          { required: true, message: '请输入确权凭证编号', trigger: 'blur' }
+        ]
+      },
+      tradeBgInvoiceRules: {
+        invoiceCode: [
+          { required: true, message: '请输入发票代码', trigger: 'blur' }
+        ],
+        invoiceNumber: [
+          { required: true, message: '请输入发票号码', trigger: 'blur' }
+        ],
+        kprq: [
+          { required: true, message: '请输入开票日期', trigger: 'blur' }
+        ],
+        invoiceMoney: [
+          { required: true, message: '请输入发票金额', trigger: 'blur' }
+        ]
+      },
+      financeProviderRules: {
+        enterpriseName: [
+          { required: true, message: '请输入企业名称', trigger: 'blur' }
+        ],
+        nsrsbh: [
+          { required: true, message: '请输入统一社会信用代码', trigger: 'blur' }
+        ],
+        mobile: [
+          { required: true, message: '请输入地址、电话', trigger: 'blur' }
+        ],
+        bank: [
+          { required: true, message: '请输入开户行及账号', trigger: 'blur' }
+        ],
+        authorizationNo: [
+          { required: true, message: '请输入授权书编号', trigger: 'blur' }
+        ]
+      },
+      authorizationFileRules: {
+        authorizationNo: [
+          { required: true, message: '请输入授权书编号', trigger: 'blur' }
+        ]
+      },
       options: {
         transferOptions: [
           { code: '0', value: '未确定' },
@@ -654,7 +867,8 @@ export default {
         authorizationNo: ''
       },
       form: {
-        // tradeNO: '2020010601',
+        disabled: true,
+        tradeNO: '2020010601',
         // debitEnterpriseName: '企业A',
         // debitNsrsbh: '911400000000000001',
         // debitMobile: '地址、电话/手机号',
@@ -663,7 +877,7 @@ export default {
         // financeNsrsbh: '111111111111111111',
         // financeMobile: '111111111111111111',
         // financeBankNumber: '111111111111111111',
-        tradeNO: '',
+        // tradeNO: '',
         debitEnterpriseName: '',
         debitNsrsbh: '',
         debitMobile: '',
@@ -677,7 +891,7 @@ export default {
         $index: -1
       },
       tradeContractForm: {
-        tradeContractFormDisabled: true,
+        tradeContractFormDisabled: false,
         tradeContractInfos: [
           {
             tradeContractNo: '2020-01-10-15-10-11',
@@ -795,22 +1009,35 @@ export default {
           }
         ]
       },
+      openFinanceProviderDialogRow: {
+        $index: -1
+      },
       financeProviderForm: {
         financeProviderFormDisabled: false,
+        financeProviderEmptyInfo: {
+          enterpriseName: '',
+          nsrsbh: '',
+          mobile: '',
+          bank: '',
+          authorizationNo: '',
+          authorizationFiles: []
+        },
         financeProviderInfos: [
           {
             enterpriseName: 'xxxxx1',
             nsrsbh: '23424243242442',
             mobile: '2342342',
             bank: '招商银行',
-            authorizationNo: '1230123-123'
+            authorizationNo: '1230123-123',
+            authorizationFiles: []
           },
           {
             enterpriseName: 'xxxxx2',
             nsrsbh: '456456456',
             mobile: '23432432234',
             bank: '建设银行',
-            authorizationNo: '56430123-123'
+            authorizationNo: '56430123-123',
+            authorizationFiles: []
           }
         ]
       },
@@ -828,12 +1055,15 @@ export default {
         appendixFileDisabled: false,
         appendixFiles: [
           {
-            file: { name: 'xxx1' }
+            file: { name: 'xxx1' },
+            url: '/static/files/附件.doc'
           }
         ]
       },
       // 申请码 dialog
       applyCodeDialogVisible: false,
+      // 读入申请码数据 dialog
+      readApplyCodeDialogVisible: false,
       // 贸易合同附件 dialog
       tradeContractFileDialogVisible: false,
       // 贸易背景上传发票 dialog
@@ -841,18 +1071,23 @@ export default {
       // 贸易背景查看发票 dialog
       tradeBgViewInvoiceDialogVisible: false,
       // 贸易背景确权凭证 dialog
-      tradebgViewTokenFileDialogVisible: false
+      tradeBgViewTokenFileDialogVisible: false,
+      // 融资提供方查看授权书 dialog
+      financeProviderAuthorizationFileDialogVisible: false
     }
   },
   methods: {
+    // 重置所有
     handleReset() {
       this.$refs.inlineForm && this.$refs.inlineForm.resetFields()
       this.$refs.form && this.$refs.form.resetFields()
       this.fileForm.appendixFiles = this.fileForm.authorizationFiles = []
       this.tradeContractForm.tradeContractInfos = [cloneDeep(this.tradeContractForm.tradeContractEmptyInfo)]
+      this.tradeBgForm.tradeBgInfos = [cloneDeep(this.tradeBgForm.tradeBgEmptyInfo)]
+      this.financeProviderForm.financeProviderInfos = [cloneDeep(this.financeProviderForm.financeProviderEmptyInfo)]
     },
     // 添加贸易合同行
-    handleAddtradeContractRow($index) {
+    handleAddTradeContractRow($index) {
       const emptyInfo = cloneDeep(this.tradeContractForm.tradeContractEmptyInfo)
       this.tradeContractForm.tradeContractInfos.splice($index + 1, 0, emptyInfo)
     },
@@ -875,7 +1110,7 @@ export default {
     handleTradeContractUploadChange(e) {
       const { $index } = this.openTradeContractDialogRow
       const tradeContractFiles = this.tradeContractForm.tradeContractInfos[$index].tradeContractFiles
-      e.target.files.forEach(file => {
+      Array.from(e.target.files).forEach(file => {
         tradeContractFiles.push({
           file: file,
           url: '/static/file/贸易合同书.doc'
@@ -897,7 +1132,7 @@ export default {
       const rowIndex = this.openTradeContractDialogRow.$index
       location.href = this.tradeContractForm.tradeContractInfos[rowIndex].tradeContractFiles[$index].url
     },
-    // 打开贸易背景上传发票Diglog
+    // 打开贸易背景上传发票Dialog
     handleViewTradeBgUploadInvoice($index, row) {
       this.openTradeBgDialogRow = { $index, ...row }
       this.tradeBgForm.invoiceInfoTempForm = cloneDeep(this.tradeBgForm.tradeBgInfos[$index].invoiceInfoForm)
@@ -949,6 +1184,15 @@ export default {
       const rowIndex = this.openTradeBgDialogRow.$index
       this.tradeBgForm.tradeBgInfos[rowIndex].invoiceInfoForm = this.tradeBgForm.invoiceInfoTempForm
     },
+    // 贸易背景上传发票 确定按钮
+    handleTradeBgUploadInvoiceConfirm() {
+      this.$refs.tradeBgUploadInvoiceTableForm.validate(valid => {
+        if (valid) {
+          this.$message({ message: '保存成功', type: 'success' })
+          this.tradeBgUploadInvoiceDialogVisible = false
+        }
+      })
+    },
     // 贸易背景查看发票
     handleViewTradeBgInvoice($index, row) {
       this.tradeBgViewInvoiceDialogVisible = true
@@ -966,7 +1210,7 @@ export default {
     handleTradeBgTokenFileChange(e) {
       const rowIndex = this.openTradeBgDialogRow.$index
       const tokenFiles = this.tradeBgForm.tradeBgInfos[rowIndex].tokenFiles
-      e.target.files.forEach(file => {
+      Array.from(e.target.files).forEach(file => {
         tokenFiles.push(
           { file }
         )
@@ -974,13 +1218,15 @@ export default {
     },
     // 贸易背景 查看确权凭证
     handleViewTokenFile($index, row) {
-      this.tradebgViewTokenFileDialogVisible = true
+      this.tradeBgViewTokenFileDialogVisible = true
       this.openTradeBgDialogRow = { $index, ...row }
     },
+    // 贸易背景 添加行
     handleAddTradeBgRow($index, row) {
       const emptyInfo = cloneDeep(this.tradeBgForm.tradeBgEmptyInfo)
       this.tradeBgForm.tradeBgInfos.splice($index + 1, 0, emptyInfo)
     },
+    // 贸易背景 删除行
     handleDeleteTradeBgRow($index, row) {
       const infos = this.tradeBgForm.tradeBgInfos
       if (infos.length === 1) {
@@ -990,23 +1236,117 @@ export default {
         infos.splice($index, 1)
       }
     },
+    // 打开融资提供方授权书文件上传框
+    handleOpenFinanceProviderAuthorizationFileUpload($index, row) {
+      this.openFinanceProviderDialogRow = { $index, ...row }
+      this.$refs.financeProviderAuthorizationFile.click()
+    },
+    // 融资提供方 上传授权书
+    handleFinanceProviderAuthorizationFileChange(e) {
+      const rowIndex = this.openFinanceProviderDialogRow.$index
+      const authorizationFiles = this.financeProviderForm.financeProviderInfos[rowIndex].authorizationFiles
+      Array.from(e.target.files).forEach(file => {
+        authorizationFiles.push({
+          file,
+          url: '/static/files/授权书.doc'
+        })
+      })
+    },
+    // 融资提供方 查看授权书
+    handleViewFinanceProviderAuthorizationFile($index, row) {
+      this.openFinanceProviderDialogRow = { $index, ...row }
+      this.financeProviderAuthorizationFileDialogVisible = true
+    },
+    // 融资提供方 查看授权书 下载
+    handleDownloadFinanceProviderAuthorizationFile($index) {
+      const rowIndex = this.openFinanceProviderDialogRow.$index
+      location.href = this.financeProviderForm.financeProviderInfos[rowIndex].authorizationFiles[$index].url
+    },
+    // 融资提供方 查看授权书 删除
+    handleDeleteFinanceProviderAuthorizationFile($index) {
+      const rowIndex = this.openFinanceProviderDialogRow.$index
+      this.financeProviderForm.financeProviderInfos[rowIndex].authorizationFiles.splice($index, 1)
+    },
+    // 融资提供方 添加行
+    handleAddFinanceProviderRow($index) {
+      const emptyInfo = cloneDeep(this.financeProviderForm.financeProviderEmptyInfo)
+      this.financeProviderForm.financeProviderInfos.splice($index + 1, 0, emptyInfo)
+    },
+    // 融资提供方 删除行
+    handleDeleteFinanceProviderRow($index) {
+      const infos = this.financeProviderForm.financeProviderInfos
+      if (infos.length === 1) {
+        const emptyInfo = cloneDeep(this.financeProviderForm.financeProviderEmptyInfo)
+        infos.splice($index, 1, emptyInfo)
+      } else {
+        infos.splice($index, 1)
+      }
+    },
     // 上传授权书
     handleAuthorizationUploadChange(e) {
       const authorizationFiles = this.fileForm.authorizationFiles
-      e.target.files.forEach(file => {
+      Array.from(e.target.files).forEach(file => {
         authorizationFiles.push({
           file,
-          authorizationNo: ''
+          authorizationNo: '',
+          url: '/static/files/授权书.doc'
         })
       })
+    },
+    // 下载附件
+    handleDownloadAuthorizationFile($index) {
+      location.href = this.fileForm.authorizationFiles[$index].url
+    },
+    // 删除授权书
+    handleDeleteAuthorizationFile($index) {
+      this.fileForm.authorizationFiles.splice($index, 1)
     },
     // 上传附件
     handleAppendixUploadChange(e) {
       const appendixFiles = this.fileForm.appendixFiles
-      e.target.files.forEach(file => {
+      Array.from(e.target.files).forEach(file => {
         appendixFiles.push({
           file,
-          authorizationNo: ''
+          url: '/static/files/附件.doc'
+        })
+      })
+    },
+    // 下载附件
+    handleDownloadAppendixFile($index) {
+      location.href = this.fileForm.appendixFiles[$index].url
+    },
+    // 删除附件
+    handleDeleteAppendixFile($index) {
+      this.fileForm.appendixFiles.splice($index, 1)
+    },
+    // 保存
+    handleSave() {
+      this.__validate().then(() => {
+        this.$message({ message: '保存成功', type: 'success' })
+      })
+    },
+    // 提交
+    handleSubmit() {
+      this.__validate().then(() => {
+        this.$message({ message: '提交成功', type: 'success' })
+      })
+    },
+    // 校验
+    __validate() {
+      return new Promise((resolve, reject) => {
+        const validates = []
+        if (this.$refs.inlineForm) validates.push(this.$refs.inlineForm.validate())
+        if (this.$refs.form) validates.push(this.$refs.form.validate())
+        if (this.$refs.tradeContractTableForm) validates.push(this.$refs.tradeContractTableForm.validate())
+        if (this.$refs.tradeBgTableForm) validates.push(this.$refs.tradeBgTableForm.validate())
+        if (this.$refs.financeProviderTableForm) validates.push(this.$refs.financeProviderTableForm.validate())
+        if (this.$refs.authorizationFileTableForm) validates.push(this.$refs.authorizationFileTableForm.validate())
+        Promise.all(validates).then(results => {
+          if (results.every(result => result)) {
+            resolve()
+          } else {
+            reject()
+          }
         })
       })
     }
@@ -1015,7 +1355,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-  $bgColor: #cccccc;
+  $bgColor: #e9f3ff;
 
   .view-apply {
     padding: 20px;
@@ -1033,19 +1373,34 @@ export default {
       padding-left: 228px;
       /deep/ .el-form-item {
         display: inline-block;
-        width: 50%;
+        width: calc(50% - 3px);
         margin-right: 0;
-      }
-      .authorization-no {
-        /deep/ .el-form-item__content {
-          width: calc(100% - 86px)
+
+        &.apply-id {
+          .el-form-item__content {
+            width: calc(100% - 120px)
+          }
+        }
+        &.authorization-no {
+          .el-form-item__label {
+            float: left;
+            width: 100px;
+          }
+          .el-form-item__content {
+            float: left;
+            width: calc(100% - 100px)
+          }
         }
       }
-      .apply-code-btn {
+
+      .apply-code-btn, .read-apply-code-btn {
         width: 100px;
         position: absolute;
         right: -150px;
         top: 0;
+        &.read-apply-code-btn {
+          right: -300px;
+        }
       }
     }
 
@@ -1056,11 +1411,6 @@ export default {
       }
       .center-txt {
         text-align: center;
-      }
-      .table-header {
-        th {
-          background-color: $bgColor;
-        }
       }
     }
 
@@ -1074,7 +1424,16 @@ export default {
 
     .upload-wrapper {
       /deep/ .el-table {
-        margin-top: 5px;
+        margin-top: 10px;
+      }
+      .note {
+        &::before {
+          content: '';
+          width: 20px;
+          display: inline-block;
+        }
+        font-size: 13px;
+        color: #cccccc;
       }
     }
 
@@ -1083,6 +1442,14 @@ export default {
     }
 
     /deep/ .el-dialog {
+      &.read-apply-code-dialog {
+        .el-dialog__body {
+          text-align: center;
+        }
+        .el-dialog__footer {
+          padding: 0;
+        }
+      }
       .el-dialog__header {
         background-color: $bgColor;
       }

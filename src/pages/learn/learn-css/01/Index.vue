@@ -5,9 +5,9 @@
 </template>
 
 <script>
-import A from '@learn/learn-css/A'
-import B from '@learn/learn-css/B'
-import C from '@learn/learn-css/C'
+import A from '@learn/learn-css/01/A'
+import B from '@learn/learn-css/01/B'
+import C from '@learn/learn-css/01/C'
 
 export default {
   name: 'Index',

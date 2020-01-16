@@ -5,12 +5,13 @@ import LearnSlot from '@learn/learn-slot/Index'
 import LearnMytable from '@learn/learn-mytable/Index'
 import LearnfunctionalComponent from '@learn/learn-functional-component/A'
 import LearnProvideInject from '@learn/learn-provide-inject/A'
-import LearnCss from '@learn/learn-css/Index'
+import LearnDisplayContainer from '@learn/learn-css/01/Index'
+import learnDisplayInlineForm from '@learn/learn-css/02/Index'
 import ElTableBugScope from '@bug/el-table-bug/index'
 import learnVuex from '@learn/learn-vuex/dept/index'
 import learnDisplay from '@learn/learn-display/index'
 import mainContent from '@learn/learn-display/components/index'
-import Temp from '@/pages/temp/index.vue'
+import viewApply from '@/pages/temp/viewApply/index.vue'
 
 Vue.use(Router)
 
@@ -42,9 +43,9 @@ export default new Router({
       component: LearnProvideInject
     },
     {
-      path: '/learn-css',
-      name: 'learnCss',
-      component: LearnCss
+      // 水平和垂直居中
+      path: '/learn-display-container',
+      component: LearnDisplayContainer
     },
     {
       path: '/el-table-bug-Scope',
@@ -57,6 +58,7 @@ export default new Router({
       component: learnVuex
     },
     {
+      // 页面布局 (header - main - footer)
       path: '/learn-display',
       component: learnDisplay,
       children: [
@@ -68,8 +70,14 @@ export default new Router({
       ]
     },
     {
-      path: '/temp',
-      component: Temp
+      // 临时 查看申请
+      path: '/temp/viewApply',
+      component: viewApply
+    },
+    {
+      // 页面样式， 行内表单和垂直表单对齐
+      path: '/learn-display-inline-form',
+      component: learnDisplayInlineForm
     }
   ]
 })
