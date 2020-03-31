@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import App from '@/App'
+// import App from '@/App'
+import Demo from '@/Demo'
 import LearnSlot from '@learn/learn-slot/Index'
 import LearnMytable from '@learn/learn-mytable/Index'
 import LearnfunctionalComponent from '@learn/learn-functional-component/A'
@@ -20,8 +21,13 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'index',
-      component: App
+      redirect: '/demo'
+      // component: App,
+    },
+    {
+      path: '/demo',
+      name: 'demo',
+      component: Demo
     },
     {
       path: '/learn-slot',

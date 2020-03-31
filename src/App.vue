@@ -1,7 +1,5 @@
 <template>
-  <div>
-    <div v-for="(item, index) in data" :key="index">{{ item }}</div>
-    <button @click="data = [1,2,9]">删除第二个</button>
+  <div id="app">
     <router-view />
   </div>
 </template>
@@ -11,18 +9,13 @@
 export default {
   data() {
     return {
-      name: 'App',
-      data: [1, 2, 3, 4]
+      name: 'App'
     }
   },
   provide() {
     return {
       app: this
     }
-  },
-  methods: {},
-  mounted() {
-    document.dispatchEvent(new Event('custom-render-trigger'))
   }
 }
 </script>

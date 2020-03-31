@@ -16,14 +16,18 @@ export default {
   },
   data() {
     return {
-      value: '我是td'
+      // value: '我是td'
+    }
+  },
+  computed: {
+    value() {
+      return this.$parent.$props.item[this.prop]
     }
   },
   mounted() {
     // console.log(this.prop)
     // console.log(this.$parent.$props.item)
     // console.log(this.$parent.$props.item[this.prop])
-    this.value = this.$parent.$props.item[this.prop]
   }
 
 }

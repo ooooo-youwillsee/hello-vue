@@ -3,22 +3,25 @@
     <my-table :data="data">
       <my-td prop="id">
         <template slot-scope="scope">
-          {{ scope.row.id + '00000' }}
+          {{ scope.row.id }}
         </template>
       </my-td>
-      <my-td prop="name"></my-td>
+      <my-td prop="name" />
       <my-td>
-        <template>
-          <button>点击我</button>
-        </template>
+        <button>点击我</button>
       </my-td>
     </my-table>
+
+    <br>
+    <el-button type="primary" @click="listQuery">请求数据</el-button>
+    <el-button type="primary" @click="handleClick">点击</el-button>
   </div>
 </template>
 
 <script>
 import MyTable from '@learn/learn-mytable/components/MyTable'
 import MyTd from '@learn/learn-mytable/components/MyTd'
+import request from '@/axios'
 
 export default {
   name: 'LearnSlot',
@@ -37,12 +40,19 @@ export default {
         {
           id: 3,
           name: 'wangwu'
-        },
-        {
-          id: 4,
-          name: 'xinhong'
         }
       ]
+    }
+  },
+  methods: {
+    listQuery() {
+      console.log('request--------------------')
+      request.get('/user/list').then(res => {
+        this.data = res.data.data
+      })
+    },
+    handleClick() {
+      console.log('-----------')
     }
   }
 }

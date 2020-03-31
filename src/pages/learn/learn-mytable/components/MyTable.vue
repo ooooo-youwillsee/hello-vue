@@ -1,6 +1,6 @@
 <template>
   <table>
-    <my-tr v-for="item in data" :key="item.index" :item="item">
+    <my-tr v-for="item in data" :key="item.id" :item="item">
       <!--      <my-td prop="name"></my-td>-->
       <slot></slot>
     </my-tr>

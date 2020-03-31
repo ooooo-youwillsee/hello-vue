@@ -10,7 +10,10 @@
 export default {
   name: 'MyTr',
   props: {
-    item: Object
+    item: {
+      type: Object,
+      default: () => {}
+    }
   },
   data() {
     return {}
