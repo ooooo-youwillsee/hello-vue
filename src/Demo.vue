@@ -2,6 +2,13 @@
   <div>
     <h1>Demo</h1>
     <el-button type="primary" @click="listQuery()">请求数据</el-button>
+    <el-table :data="data" style="width: 100%">
+      <el-table-column prop="name" label="姓名" width="180"></el-table-column>
+      <el-table-column prop="age" label="地址"></el-table-column>
+    </el-table>
+
+    <hr>
+    <router-view />
   </div>
 </template>
 
@@ -12,19 +19,18 @@ export default {
   name: 'Demo',
   data() {
     return {
-      data: [1, 2, 3, 4]
+      data: []
     }
   },
   methods: {
     listQuery() {
-      console.log('request--------------------')
       request.get('/user/list').then(res => {
         this.data = res.data.data
       })
     }
   },
-  mounted() {
-    console.log('mounted--------------------')
+  created() {
+    this.listQuery()
   }
 }
 </script>

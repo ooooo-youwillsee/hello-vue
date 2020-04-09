@@ -12,10 +12,10 @@ module.exports = {
       errors: true
     },
     proxy: {
-      '/api': {
+      '/apis': {
         target: 'http://localhost:3000',
         changeOrigin: true,
-        pathRewrite: { '^/api': '' }
+        pathRewrite: { '^/apis': '' }
       }
     }
   },
@@ -27,8 +27,9 @@ module.exports = {
     if (process.env.NODE_ENV !== 'production') return
     let plugins = []
     plugins.push(new PrerenderSPAPlugin({
-      staticDir: path.join(__dirname, 'dist'),
-      routes: ['/', '/demo', '/learn-mytable'],
+      staticDir: resolve('dist'),
+      routes: ['/', '/demo/','/demo/2', '/learn-mytable'],
+      // routes: [ '/demo/'],
       minify: {
         collapseBooleanAttributes: true,
         collapseWhitespace: true,
@@ -41,7 +42,7 @@ module.exports = {
         // inject: 'prerender',
         // maxConcurrentRoutes: 4,
         renderAfterTime: 10000,
-        headless: false,
+        headless: true,
         renderAfterDocumentEvent: 'render-event'
       })
     }))
