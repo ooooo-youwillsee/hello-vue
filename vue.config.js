@@ -5,11 +5,12 @@ const Renderer = PrerenderSPAPlugin.PuppeteerRenderer
 const resolve = (dir) => path.join(__dirname, dir)
 
 module.exports = {
+  lintOnSave: process.env.NODE_ENV === 'development',
   devServer: {
     port: 8090,
     overlay: {
-      warnings: true,
-      errors: true
+      // warnings: true,
+      // errors: true
     },
     proxy: {
       '/apis': {
@@ -20,15 +21,20 @@ module.exports = {
     }
   },
   chainWebpack: config => {
-    config.resolve.
-      alias.set('@learn', resolve('./src/pages/learn')).set('@bug', resolve('src/pages/bug'))
+    config.resolve.alias
+    .set('@learn',resolve('./src/pages/learn'))
+    .set('@bug', resolve('src/pages/bug'))
+
+    config.when(process.env.NODE_ENV === 'development',
+      config => config.devtool('cheap-source-map')
+    )
   },
   configureWebpack: config => {
     if (process.env.NODE_ENV !== 'production') return
     let plugins = []
     plugins.push(new PrerenderSPAPlugin({
       staticDir: resolve('dist'),
-      routes: ['/', '/demo/','/demo/2', '/learn-mytable'],
+      routes: ['/', '/demo/', '/demo/2', '/03'],
       // routes: [ '/demo/'],
       minify: {
         collapseBooleanAttributes: true,

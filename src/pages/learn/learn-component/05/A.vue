@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import B from '@learn/learn-provide-inject/B'
+import B from './B'
 
 export default {
   name: 'A',

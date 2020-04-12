@@ -1,6 +1,8 @@
 <template>
   <div>
-    <h1>Demo</h1>
+    <h1>需要运行 node server.js </h1>
+    <hr>
+
     <el-button type="primary" @click="listQuery()">请求数据</el-button>
     <el-table :data="data" style="width: 100%">
       <el-table-column prop="name" label="姓名" width="180"></el-table-column>

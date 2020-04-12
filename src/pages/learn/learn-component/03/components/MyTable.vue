@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import MyTr from '@learn/learn-mytable/components/MyTr'
+import MyTr from './MyTr'
 
 export default {
   name: 'MyTable',

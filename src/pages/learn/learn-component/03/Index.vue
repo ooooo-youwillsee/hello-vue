@@ -19,8 +19,8 @@
 </template>
 
 <script>
-import MyTable from '@learn/learn-mytable/components/MyTable'
-import MyTd from '@learn/learn-mytable/components/MyTd'
+import MyTable from './components/MyTable'
+import MyTd from './components/MyTd'
 import request from '@/axios'
 
 export default {

@@ -1,5 +1,8 @@
 <template>
   <div style="margin: 20px;">
+    <h1> 需要添加 test-ooooo@0.0.1 依赖</h1>
+    <hr>
+
     <el-tabs ref="tabs" v-model="activeName" type="card" @tab-click="handleClick">
       <el-tab-pane label="用户管理" name="first" :tip="1">用户管理</el-tab-pane>
       <el-tab-pane label="配置管理" name="second" :tip="tip">配置管理</el-tab-pane>

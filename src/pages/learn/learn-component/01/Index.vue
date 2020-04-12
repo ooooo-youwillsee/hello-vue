@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import FunctionalComponent from '@learn/learn-functional-component/functional-component'
+import FunctionalComponent from '@learn/learn-component/01/functional-component'
 
 export default {
   name: 'A',
