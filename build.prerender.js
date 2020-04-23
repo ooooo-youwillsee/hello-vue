@@ -21,6 +21,10 @@ module.exports = (api, options) => {
     const Renderer = PrerenderSPAPlugin.PuppeteerRenderer
     const prerenderConfig = await p()
     api.chainWebpack(config => {
+      config.resolve.alias
+      .set('@learn',resolve('./src/pages/learn'))
+      .set('@bug', resolve('src/pages/bug'))
+
       config.plugin('prerender').use(PrerenderSPAPlugin, [
         {
           staticDir: resolve('dist'),
