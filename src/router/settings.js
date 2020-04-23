@@ -2,8 +2,8 @@ export default [
   {
     path: '/learn-vue-base',
     title: '学习基础',
-    component: () => import('@/pages/index/Index'),
-    children: [
+    component: () => import('@/pages/index/Index')
+    /* children: [
       {
         path: 'learn-watch',
         name: 'learn-watch',
@@ -22,9 +22,9 @@ export default [
         title: 'async-await',
         component: () => import('@learn/learn-base/03/Index')
       }
-    ]
-  },
-  {
+    ]*/
+  }
+  /* {
     path: '/learn-css',
     title: '学习样式',
     component: () => import('@/pages/index/Index'),
@@ -121,6 +121,6 @@ export default [
         component: () => import('@/pages/temp/prerender-spa/Index')
       }
     ]
-  }
+  }*/
 
 ]
