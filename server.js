@@ -1,10 +1,9 @@
-const Koa = require('koa')
-var KoaRouter = require('koa-router')  /*引入是实例化路由** 推荐*/
-const app = new Koa()
+const Koa = require('koa'), KoaRouter = require('koa-router'), websockify = require('koa-websocket')
 
-const apiRouter = KoaRouter()
+const app = websockify(new Koa())
+const apiRouter = new KoaRouter(), wsRouter = new KoaRouter()
 
-const mid = () => {
+const jsonMid = () => {
   function render(json) {
     this.set('Content-Type', 'application/json')
     this.body = JSON.stringify(json)
@@ -16,13 +15,15 @@ const mid = () => {
   }
 }
 
-app.use(mid())
+app.use(jsonMid())
+
 let i = 0
-apiRouter.get('/user/list', async ctx => {
+apiRouter.all('/user/list', async ctx => {
   console.log('request -- ', i++)
   ctx.send(
     {
       message: 'ok',
+      code: 200,
       data: [
         { id: 111, name: 'tom', age: 18 },
         { id: 222, name: 'jerry', age: 20 }
@@ -31,8 +32,19 @@ apiRouter.get('/user/list', async ctx => {
   )
 })
 
-app.use(apiRouter.routes()).use(apiRouter.allowedMethods())
+wsRouter.all('/ws/message', async ctx => {
+  ctx.websocket.send('服务端收到连接')
+  ctx.websocket.on('message', message => {
+    console.log(`服务端收到数据： ${message}`)
+    ctx.websocket.send(`${message} - 222`)
+  })
+})
+
+app.ws.use(wsRouter.routes())
+app.use(apiRouter.routes())
 
 app.listen(3000, () => {
-  console.log('server start http://localhost:3000')
+  console.log('server start -> http://localhost:3000')
+  console.log('api -> http://localhost:3000/user/list')
+  console.log('ws -> ws://localhost:3000/ws/message')
 })

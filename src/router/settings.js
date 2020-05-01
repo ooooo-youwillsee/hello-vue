@@ -119,6 +119,12 @@ export default [
         name: 'prerender-spa',
         title: '预渲染demo',
         component: () => import('@/pages/temp/prerender-spa/Index')
+      },
+      {
+        path: 'ws',
+        name: 'ws',
+        title: 'websocket',
+        component: () => import('@/pages/temp/websocket/Index')
       }
     ]
   }
