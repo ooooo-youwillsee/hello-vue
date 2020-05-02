@@ -32,12 +32,19 @@ apiRouter.all('/user/list', async ctx => {
   )
 })
 
-wsRouter.all('/ws/message', async ctx => {
-  ctx.websocket.send('服务端收到连接')
-  ctx.websocket.on('message', message => {
+const wsMap = new Map()
+
+wsRouter.all('/ws/message/:id', async ctx => {
+  const { id } = ctx.params, ws = ctx.websocket
+  wsMap.set(id, ws)
+
+  ws.send(`服务端收到连接，客户端 Id: ${id}`)
+  ws.on('message', message => {
     console.log(`服务端收到数据： ${message}`)
-    ctx.websocket.send(`${message} - 222`)
+    ws.send(`${message} - 222`)
   })
+
+  setInterval(() => {wsMap.get('1') && wsMap.get('1').send('11111111111')}, 3 * 1000)
 })
 
 app.ws.use(wsRouter.routes())
@@ -46,5 +53,5 @@ app.use(apiRouter.routes())
 app.listen(3000, () => {
   console.log('server start -> http://localhost:3000')
   console.log('api -> http://localhost:3000/user/list')
-  console.log('ws -> ws://localhost:3000/ws/message')
+  console.log('ws -> ws://localhost:3000/ws/message/:id')
 })

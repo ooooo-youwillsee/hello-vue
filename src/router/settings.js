@@ -125,6 +125,20 @@ export default [
         name: 'ws',
         title: 'websocket',
         component: () => import('@/pages/temp/websocket/Index')
+      },
+      {
+        path: 'ws-a',
+        name: 'ws-a',
+        hidden: true,
+        title: 'websocket',
+        component: () => import('@/pages/temp/websocket/A')
+      },
+      {
+        path: 'ws-b',
+        name: 'ws-b',
+        hidden: true,
+        title: 'websocket',
+        component: () => import('@/pages/temp/websocket/B')
       }
     ]
   }

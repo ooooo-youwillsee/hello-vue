@@ -1,19 +1,8 @@
 <template>
   <div>
-    <div>websocket</div>
+    <div>websocket - A 客户端</div>
     <hr>
-    <el-button type="primary" @click="onsend('xxx')">点击发送消息</el-button>
-    <hr>
-
-    <el-button type="primary" @click="$router.push({ name: 'ws-a'})">
-      websocket-A
-    </el-button>
-    <hr>
-
-    <el-button type="primary" @click="$router.push({ name: 'ws-b'})">
-      websocket-B
-    </el-button>
-
+    <el-button type="primary" @click="onsend('AAA')">点击发送消息</el-button>
   </div>
 </template>
 
@@ -31,7 +20,7 @@ export default {
     },
     onopen() {
       console.log('onopen -> WebSocket连接成功')
-      setTimeout(() => this.onsend('111'), 1000)
+      setTimeout(() => this.onsend('AAA'), 1000)
     },
     onmessage(e) {
       console.log(`onmessage -> 服务端返回数据：${e.data}`)
