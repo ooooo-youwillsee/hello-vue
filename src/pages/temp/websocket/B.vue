@@ -11,7 +11,7 @@ export default {
   name: 'Index',
   methods: {
     initWebSocket() {
-      const wsurl = 'ws://localhost:8090/apis/ws/message/2'
+      const wsurl = `${process.env.VUE_APP_WEBSOCKET}/apis/ws/message/2`
       this.websock = new WebSocket(wsurl)
       this.websock.onopen = this.onopen
       this.websock.onmessage = this.onmessage

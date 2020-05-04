@@ -41,7 +41,7 @@ wsRouter.all('/ws/message/:id', async ctx => {
   ws.send(`服务端收到连接，客户端 Id: ${id}`)
   ws.on('message', message => {
     console.log(`服务端收到数据： ${message}`)
-    ws.send(`${message} - 222`)
+    ws.send(`${message} - server`)
   })
 
   setInterval(() => {wsMap.get('1') && wsMap.get('1').send('11111111111')}, 3 * 1000)
