@@ -1,0 +1,65 @@
+[
+  {
+    "c_name": "受理单表",
+    "e_name": "CRH_SBC.ACCEPTANCE",
+    "sql": "select * from CRH_SBC.ACCEPTANCE t where $where order by t.CREATE_DATE desc, t.CREATE_TIME desc",
+    "where": [
+      {
+        "name": "BUSINFLOW_NO",
+        "value": "600013"
+      },
+      {
+        "name": "CLIENT_ID",
+        "value": ""
+      }
+    ]
+  },
+  {
+    "c_name": "执行记录表",
+    "e_name": "CRH_SBC.EXCUTERECORD",
+    "sql": "select * from CRH_SBC.EXCUTERECORD t where $where order by t.CREATE_DATE desc",
+    "where": [
+      {
+        "name": "BUSINFLOW_NO",
+        "value": ""
+      },
+      {
+        "name": "REQUEST_NO",
+        "value": "2"
+      }
+    ]
+  },
+  {
+    "c_name": "执行参数表",
+    "e_name": "CRH_SBC.FORMARGS",
+    "sql": "select * from CRH_SBC.FORMARGS t where $where",
+    "where": [
+      {
+        "name": "PARAM_ID",
+        "value": "1"
+      }
+    ]
+  },
+  {
+    "c_name": "业务流程表",
+    "e_name": "CRH_USER.CRHBUSINFLOW",
+    "sql": "select * from CRH_USER.CRHBUSINFLOW t where $where",
+    "where": [
+      {
+        "name": "BUSINFLOW_NO",
+        "value": "600013"
+      }
+    ]
+  },
+  {
+    "c_name": "功能表",
+    "e_name": "CRH_USER.CRHFUNCTION",
+    "sql": "select * from CRH_USER.CRHFUNCTION t where $where",
+    "where": [
+      {
+        "name": "FUNCTION_ID",
+        "value": "CRH-SBC900039"
+      }
+    ]
+  }
+]

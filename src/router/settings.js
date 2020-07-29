@@ -139,6 +139,12 @@ export default [
         hidden: true,
         title: 'websocket',
         component: () => import('@/pages/temp/websocket/B')
+      },
+      {
+        path: 'sql',
+        name: 'sql',
+        title: 'sql',
+        component: () => import('@/pages/temp/sql/Index')
       }
     ]
   }

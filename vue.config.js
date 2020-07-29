@@ -10,6 +10,12 @@ module.exports = {
       // errors: true
     },
     proxy: {
+      '/apis/apiuser': {
+        target: 'https://zttest.csco.com.cn:8008',
+        changeOrigin: true,
+        ws: true,
+        pathRewrite: { '^/apis/apiuser': '/apiuser' }
+      },
       '/apis': {
         target: 'http://localhost:3000',
         changeOrigin: true,
