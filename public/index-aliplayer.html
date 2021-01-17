@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <link rel="icon" href="<%= BASE_URL %>favicon.ico">
+  <link rel="stylesheet" href="https://g.alicdn.com/de/prismplayer/2.9.3/skins/default/aliplayer-min.css" />
+  <script type="text/javascript" charset="utf-8"
+          src="https://g.alicdn.com/de/prismplayer/2.9.3/aliplayer-min.js"></script>
+  <title>demo</title>
+</head>
+<body>
+<div class="prism-player" id="player-con"></div>
+<script>
+var player = new Aliplayer({
+    'id': 'player-con',
+    'vid': 'e30b691cce084d65b67f986dc8fb0d47',
+    'playauth': 'eyJTZWN1cml0eVRva2VuIjoiQ0FJUy93SjFxNkZ0NUIyeWZTaklyNWZiR29MNm1acHowN1NuTm1ERm9XUU1hK0I3aGEzRnREejJJSGxQZTNGaEFPb2V2L2svbVc5VTdmb2NscnNvRXNRZEZSQ1ZObzVvNnAxR3pRU2lib3laUEVjamVpUkMydk9mQW1HMkowUFJkNmF3Q3J5TG1icS9GOTZwYjFmYjdOVWFvOS9UZmltaldGcUlLSUNBallVZEFQMGNRZ2kvYTBoVVpyQklJUWN3aDhJR0RYL1lKTmVyUEJtSStIVFhBQmhIdHhaQ2lHOXk3bys0eE1PZDVYaTRpVUhobU5jUnJwWDhPTEc1YzhrT1dKSmpTSVdOMk9WblY2elAxMHcyN2dSUnBvdDdoN1pWNFN2a3M4RC9la2RXNzBlcFB2YjR5UGhMTFFSMFlMTTNlZFJhcS9TdXV2QmtsdGIydkludDF6ZExNK1l2SkVhNWZvMjd4OWJlRSs2RUw4c3djYTJCVzA3QXlkZVNMSkw0d1doR0NEQTVURm9VSzR0d2NpSXFWa1ozRW1tRWRQU2RsUXFVTWx2NWVjK3N5N29yMUpkNTlWTHM4T2VSS2tLSEs3ZmppbjlEWmNkdE5obHdaa05HZ0RPOUtmTllhWEJsZDFKMkdyQ3JTb2xJWlJsRmtyL3pod3JXV3ozL2JzL2tEQXNXREJxQUFWRzFsa0hibVRXWDUxR1lkQUZLWnRPaGgxOWxFQ0hhSWM0WjN6dU4vZVJYbnVXd2p3eXI5Vlp4eGhXUll1NWQrSXBINklJMHl0a3FBcDVTOUxyUk5jcEFZMm55aW9iNnU3ZUk4U0UxNlNPRVp5UUVPZFlQL3lSdk12Y1djM2ZkZTFkZkkvd1c3bTV2VGZpdTdCeThOdDMzeTlNcHJNSTZ0V2hqOVNLZVBpaEkiLCJBdXRoSW5mbyI6IntcIkNJXCI6XCJFbnlEQ2pHbHFNQkJGOXFOYlJLaVZBZURrYWZheDh0UXQzV2I0R1krWk9uamg3NzVJSlAxVzVDbTNLWHhld2xwb3ZCbnNJZ1FGamRBUURiSktxV0NNdz09XCIsXCJDYWxsZXJcIjpcInd0NEh2cU5vL2lGU1Z3eUlFRFd4ZFE9PVwiLFwiRXhwaXJlVGltZVwiOlwiMjAyMS0wMS0xN1QxMDo0MDowNFpcIixcIk1lZGlhSWRcIjpcImUzMGI2OTFjY2UwODRkNjViNjdmOTg2ZGM4ZmIwZDQ3XCIsXCJQbGF5RG9tYWluXCI6XCJtZWRpYTAwMS5nZWVrYmFuZy5vcmdcIixcIlNpZ25hdHVyZVwiOlwiNmlORmlyalZiN2tqMkFWaFovenRFdDNva05VPVwifSIsIlZpZGVvTWV0YSI6eyJTdGF0dXMiOiJOb3JtYWwiLCJWaWRlb0lkIjoiZTMwYjY5MWNjZTA4NGQ2NWI2N2Y5ODZkYzhmYjBkNDciLCJUaXRsZSI6IuesrOWFreiKguivviDorq3nu4PokKXmj5DkuqTkvZzkuJrnmoTlrozmlbTmtYHnqItfdjEuNSIsIkNvdmVyVVJMIjoiaHR0cHM6Ly9tZWRpYTAwMS5nZWVrYmFuZy5vcmcvZTMwYjY5MWNjZTA4NGQ2NWI2N2Y5ODZkYzhmYjBkNDcvc25hcHNob3RzLzRmMDBmZDNhYTkxMjQ4Y2E5ZWQ5NzA4N2VmMDhiZWE0LTAwMDA1LmpwZyIsIkR1cmF0aW9uIjo0OTYuMjE4fSwiQWNjZXNzS2V5SWQiOiJTVFMuTlRuUThOdEVSZHZMNEZ0RWRZZ29XamhuViIsIlBsYXlEb21haW4iOiJtZWRpYTAwMS5nZWVrYmFuZy5vcmciLCJBY2Nlc3NLZXlTZWNyZXQiOiJlandQN0UzMnlUcUdTVXZGUGRQb2ZFdGhNb3E1U3RGSG9tMkFNOE1QalRtIiwiUmVnaW9uIjoiY24tc2hhbmdoYWkiLCJDdXN0b21lcklkIjozMTMwODQ5M30',
+    'encryptType': '1',
+    'qualitySort': 'asc',
+    // 'format': 'M3U8',
+    'mediaType': 'video',
+    'width': '100%',
+    'height': '500px',
+    'autoplay': true,
+    'isLive': false,
+    'rePlay': true,
+    'playsinline': true,
+    'preload': true,
+    'controlBarVisibility': 'hover',
+    'useH5Prism': true,
+    'language': 'en-us',
+    'authTimeout': 1000 * 60 * 60 * 2
+  }, function(player) {
+    console.log('The player is created')
+  }
+)
+</script>
+</script>
+
+// =========
+<div id="app"></div>
+<!-- built files will be auto injected -->
+</body>
+</html>
