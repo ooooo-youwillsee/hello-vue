@@ -11,7 +11,7 @@ module.exports = {
     },
     proxy: {
       '/apis/apiuser': {
-        target: 'https://zttest.csco.com.cn:8008',
+        target: 'http://localhost:8008',
         changeOrigin: true,
         ws: true,
         pathRewrite: { '^/apis/apiuser': '/apiuser' }
